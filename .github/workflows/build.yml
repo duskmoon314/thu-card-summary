@@ -15,7 +15,13 @@ jobs:
 
     strategy:
       matrix:
-        browser: [chrome, firefox, edge]
+        include:
+          - browser: chrome
+            output: chrome-mv3
+          - browser: firefox
+            output: firefox-mv2
+          - browser: edge
+            output: edge-mv3
 
     steps:
       - name: Checkout code
@@ -46,7 +52,7 @@ jobs:
         uses: actions/upload-artifact@v6
         with:
           name: thu-card-summary-${{ matrix.browser }}
-          path: .output/${{ matrix.browser }}*/*
+          path: .output/${{ matrix.output }}/*
           include-hidden-files: true
 
       - name: Upload Release Assets
