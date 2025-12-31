@@ -46,7 +46,7 @@ jobs:
         uses: actions/upload-artifact@v6
         with:
           name: thu-card-summary-${{ matrix.browser }}
-          path: .output/${{ matrix.browser }}*
+          path: .output/${{ matrix.browser }}*/*
           include-hidden-files: true
 
       - name: Upload Release Assets
