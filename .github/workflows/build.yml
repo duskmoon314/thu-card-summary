@@ -40,18 +40,13 @@ jobs:
         run: bun install
 
       - name: Build and zip extension for ${{ matrix.browser }}
-        run: bun zip -b ${{ matrix.browser }}
-
-      - name: List output files
-        run: |
-          ls -la .output/
-          find .output -name "*.zip" -type f
+        run: bun run build -b ${{ matrix.browser }}
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: thu-card-summary-${{ matrix.browser }}
-          path: .output/*.zip
+          path: .output/${{ matrix.browser }}*
           include-hidden-files: true
 
       - name: Upload Release Assets
