@@ -1,7 +1,6 @@
 import { waitElement } from "@1natsu/wait-element";
 import { createRoot } from "react-dom/client";
-import { StyleProvider } from '@ant-design/cssinjs';
-import { PortalTargetContext } from '@/contexts/PortalTargetContext';
+import { StyleProvider } from "@ant-design/cssinjs";
 import ReportPanel from "@/components/ReportPanel";
 
 export default defineContentScript({
@@ -96,54 +95,23 @@ function openPanel(shadowRoot: ShadowRoot, rootContainer: HTMLDivElement) {
     console.log("[THU-CARD-SUMMARY] Button removed");
   }
 
-  // Create a <head> element in shadow DOM for Ant Design styles
-  const shadowHead = document.createElement("head");
-  shadowRoot.appendChild(shadowHead);
+  const container = document.createElement("div");
+  container.id = "THU-CARD-SUMMARY-panel-container";
+  shadowRoot.appendChild(container);
+  const root = createRoot(container);
 
-  // Create panel container
-  const panelContainer = document.createElement("div");
-  panelContainer.id = "THU-CARD-SUMMARY-panel-container";
-  shadowRoot.appendChild(panelContainer);
-
-  // Load custom styles for modal - container should NOT block clicks
-  const style = document.createElement("style");
-  style.textContent = `
-    #THU-CARD-SUMMARY-panel-container {
-      all: initial;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 0;
-      height: 0;
-      z-index: 999999;
-      pointer-events: none;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    }
-
-    #THU-CARD-SUMMARY-panel-container > * {
-      pointer-events: auto;
-    }
-  `;
-  shadowHead.appendChild(style);
-
-  console.log("[THU-CARD-SUMMARY] Shadow DOM structure created");
-
-  // Render React component with StyleProvider and PortalTargetContext
-  const root = createRoot(panelContainer);
   root.render(
-    <StyleProvider container={shadowHead}>
-      <PortalTargetContext.Provider value={panelContainer}>
-        <ReportPanel
-          onClose={() => {
-            console.log("[THU-CARD-SUMMARY] Closing panel");
-            root.unmount();
-            rootContainer.remove();
+    <StyleProvider container={shadowRoot}>
+      <ReportPanel
+        onClose={() => {
+          console.log("[THU-CARD-SUMMARY] Closing panel");
+          root.unmount();
+          container.remove();
 
-            // Recreate the button
-            createFloatingButton();
-          }}
-        />
-      </PortalTargetContext.Provider>
+          // Recreate the button
+          createFloatingButton();
+        }}
+      />
     </StyleProvider>
   );
 
