@@ -70,7 +70,7 @@ jobs:
         run: |
           mkdir -p .output
           for dir in thu-card-summary-*; do
-            zip -r ".output/${dir}.zip" "$dir"
+            (cd "$dir" && zip -r "../.output/${dir}.zip" .)
           done
 
       - name: Upload Release Assets
