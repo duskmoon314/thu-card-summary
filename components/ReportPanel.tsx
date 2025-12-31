@@ -17,10 +17,16 @@ import ReportView from "./ReportView";
 const { Title, Paragraph } = Typography;
 
 interface ReportPanelProps {
+  open: boolean;
   onClose: () => void;
+  getContainer?: HTMLElement | (() => HTMLElement) | false;
 }
 
-export default function ReportPanel({ onClose }: ReportPanelProps) {
+export default function ReportPanel({
+  open,
+  onClose,
+  getContainer,
+}: ReportPanelProps) {
   const [loading, setLoading] = useState(false);
   const [reportData, setReportData] = useState<ReportData | null>(null);
   const [form] = Form.useForm();
@@ -59,22 +65,30 @@ export default function ReportPanel({ onClose }: ReportPanelProps) {
   };
 
   return (
-    <ConfigProvider>
+    <ConfigProvider
+      getPopupContainer={
+        getContainer
+          ? typeof getContainer === "function"
+            ? getContainer
+            : () => getContainer
+          : undefined
+      }
+    >
       <Modal
-        open={true}
+        open={open}
         onCancel={onClose}
         footer={null}
         width={reportData ? 800 : 500}
         centered
+        getContainer={getContainer}
         title={
           <Space>
             <FileTextOutlined />
-            <span>清华大学卡年度报告</span>
+            <span>清华大学校园卡年度报告</span>
           </Space>
         }
         styles={{
           header: {
-            background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
             color: "white",
           },
           body: {
@@ -139,7 +153,7 @@ export default function ReportPanel({ onClose }: ReportPanelProps) {
                 description={
                   <ul style={{ margin: "8px 0 0 0", paddingLeft: "20px" }}>
                     <li>报告数据来源于 2025-01-01 至 2025-12-31</li>
-                    <li>仅统计食堂消费记录，不含其他交易</li>
+                    <li>目前仅统计食堂消费记录，不含其他交易</li>
                   </ul>
                 }
                 type="info"
