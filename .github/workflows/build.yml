@@ -32,11 +32,17 @@ jobs:
       - name: Build and zip extension for ${{ matrix.browser }}
         run: bun wxt zip -b ${{ matrix.browser }}
 
+      - name: List output files
+        run: |
+          ls -la .output/
+          find .output -name "*.zip" -type f
+
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: thu-card-summary-${{ matrix.browser }}
           path: .output/*.zip
+          include-hidden-files: true
 
       - name: Upload Release Assets
         if: startsWith(github.ref, 'refs/tags/v')
