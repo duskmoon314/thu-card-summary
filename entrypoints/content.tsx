@@ -3,7 +3,7 @@ import App from "./App";
 import "antd/dist/antd.css";
 
 export default defineContentScript({
-  matches: ["*://card.tsinghua.edu.cn/userselftrade*"],
+  matches: ["*://card.tsinghua.edu.cn/*"],
   cssInjectionMode: "ui",
 
   async main(ctx) {

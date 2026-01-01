@@ -9,6 +9,7 @@ import {
   Space,
   Typography,
   Alert,
+  message,
 } from "antd";
 import { FileTextOutlined } from "@ant-design/icons";
 import type { ReportData } from "@/lib/types";
@@ -30,6 +31,7 @@ export default function ReportPanel({
   const [loading, setLoading] = useState(false);
   const [reportData, setReportData] = useState<ReportData | null>(null);
   const [form] = Form.useForm();
+  const [messageApi, contextHolder] = message.useMessage();
 
   const handleGenerate = async (values: { userId: string }) => {
     setLoading(true);
@@ -58,7 +60,22 @@ export default function ReportPanel({
       }
     } catch (error) {
       console.error("[PANEL] Error:", error);
-      alert(error instanceof Error ? error.message : "生成报告时发生错误");
+      const errorMsg =
+        error instanceof Error ? error.message : "生成报告时发生错误";
+
+      // Check if it's a cookie error
+      if (
+        errorMsg.includes("cookie") ||
+        errorMsg.includes("Cookie") ||
+        errorMsg.includes("logged in")
+      ) {
+        messageApi.error("请先登录校园卡系统 (card.tsinghua.edu.cn)");
+      } else {
+        messageApi.error(errorMsg);
+        messageApi.error(
+          "若尚未登录，请先登录系统；若已登录，请尝试排查网络问题"
+        );
+      }
     } finally {
       setLoading(false);
     }
@@ -74,6 +91,7 @@ export default function ReportPanel({
           : undefined
       }
     >
+      {contextHolder}
       <Modal
         open={open}
         onCancel={onClose}
