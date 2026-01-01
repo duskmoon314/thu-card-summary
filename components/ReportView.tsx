@@ -15,13 +15,13 @@ import {
   PosterVisitedDays,
   PosterScore,
   PosterMonthlyTrends,
-  PosterAchievements,
+  // PosterAchievements,
   PosterConsistentSpot,
   PosterPriceDistribution,
   PosterWeekdayWeekend,
   PosterSeasonalPatterns,
   PosterLoyalty,
-  PosterThankYou,
+  // PosterThankYou,
   PosterWaterUtilities,
   PosterBalanceManagement,
   PosterBeyondDining,
@@ -176,7 +176,7 @@ export default function ReportView({ data, onBack }: ReportViewProps) {
     <PosterVisitedDays key="visited" data={data} fontFamily={selectedFont} />,
     <PosterScore key="score" data={data} fontFamily={selectedFont} />,
     <PosterMonthlyTrends key="monthly" data={data} fontFamily={selectedFont} />,
-    <PosterAchievements key="achievements" data={data} fontFamily={selectedFont} />,
+    // <PosterAchievements key="achievements" data={data} fontFamily={selectedFont} />,
     <PosterConsistentSpot key="consistent" data={data} fontFamily={selectedFont} />,
     <PosterPriceDistribution key="price" data={data} fontFamily={selectedFont} />,
     <PosterWeekdayWeekend key="weekday" data={data} fontFamily={selectedFont} />,
@@ -186,7 +186,7 @@ export default function ReportView({ data, onBack }: ReportViewProps) {
     <PosterBalanceManagement key="balance" data={data} fontFamily={selectedFont} />,
     <PosterBeyondDining key="beyond" data={data} fontFamily={selectedFont} />,
     <PosterCampusTimeline key="timeline" data={data} fontFamily={selectedFont} />,
-    <PosterThankYou key="thankyou" data={data} fontFamily={selectedFont} />,
+    // <PosterThankYou key="thankyou" data={data} fontFamily={selectedFont} />,
   ].filter((poster) => poster !== null);
 
   const handleDownload = async () => {

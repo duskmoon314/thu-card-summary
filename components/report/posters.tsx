@@ -24,7 +24,7 @@ const PosterCard = ({
       padding: "24px",
       display: "flex",
       flexDirection: "column",
-      justifyContent: "space-between",
+      justifyContent: "space-around",
       color: "#333",
       fontFamily: fontFamily || '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
     }}
@@ -49,7 +49,7 @@ const NumberHighlight = ({ children }: { children: React.ReactNode }) => (
 const LocationHighlight = ({ children }: { children: React.ReactNode }) => (
   <span
     style={{
-      fontSize: "20px",
+      fontSize: "24px",
       fontWeight: "bold",
       color: "#623CEA",
       margin: "0 2px",
@@ -67,32 +67,25 @@ export function PosterBasicStats({ data, fontFamily }: { data: ReportData; fontF
       <div>
         <div style={{ fontSize: "16px", lineHeight: "1.6" }}>
           <div>
-            <NumberHighlight>2025</NumberHighlight>
-            年是个值得回味的年份
+            <NumberHighlight>2025</NumberHighlight>年是个值得回味的年份
           </div>
           <div style={{ marginTop: "10px", fontSize: "12px" }}>在这一年里:</div>
           <div>
-            你一共花了
-            <NumberHighlight>{(totalAmount / 100).toFixed(2)}</NumberHighlight>元
+            你为<NumberHighlight>{(totalAmount / 100).toFixed(2)}</NumberHighlight>元的美好时光买单
           </div>
           <div>
-            细细品味了<NumberHighlight>{totalMeals}</NumberHighlight>
-            顿美餐
+            细细品味了<NumberHighlight>{totalMeals}</NumberHighlight>顿美餐
           </div>
           <div>
-            你走进
-            <NumberHighlight>{numUniqueCafeterias}</NumberHighlight>
-            个食堂
+            走进<NumberHighlight>{numUniqueCafeterias}</NumberHighlight>个食堂
           </div>
           <div>
-            探寻过<NumberHighlight>{numUniqueStalls}</NumberHighlight>
-            个档口
+            遇见<NumberHighlight>{numUniqueStalls}</NumberHighlight>种不同的惊喜
           </div>
         </div>
       </div>
-      <div style={{ fontSize: "10px", color: "#666", textAlign: "center" }}>
-        <div>有哪些特别的美食味道</div>
-        <div>让你特别认可呢？</div>
+      <div style={{ fontSize: "14px", color: "#666", textAlign: "center" }}>
+        <div>哪一口温暖，曾照亮你的一天？</div>
       </div>
     </PosterCard>
   );
@@ -107,19 +100,19 @@ export function PosterFavorite({ data, fontFamily }: { data: ReportData; fontFam
       <div style={{ fontSize: "16px", lineHeight: "1.8" }}>
         <div>
           <LocationHighlight>{mostSpentCafeteria}</LocationHighlight>
-          是你最慷慨投入的地方
+          是你最安心的归处
         </div>
         <div>
-          你在那共花费
-          <NumberHighlight>{(mostSpentCafeteriaAmount / 100).toFixed(2)}</NumberHighlight>元
+          在这里，你留下了
+          <NumberHighlight>{(mostSpentCafeteriaAmount / 100).toFixed(2)}</NumberHighlight>
+          元的时光印记
         </div>
         <div style={{ textAlign: "right", marginTop: "40px" }}>
-          <div>其中，让你情有独钟的</div>
+          <div>而那个让你一次次回头的</div>
           <div style={{ marginTop: "8px" }}>
             <LocationHighlight>{stall}</LocationHighlight>
-            档口
           </div>
-          <div>是不是你心中的华子最佳</div>
+          <div>大概就是华子味道里最治愈的一口</div>
         </div>
       </div>
     </PosterCard>
@@ -141,17 +134,17 @@ export function PosterMeanCost({ data, fontFamily }: { data: ReportData; fontFam
           在<LocationHighlight>{mostCostlyCafeteria}</LocationHighlight>
         </div>
         <div>
-          你平均每顿花费
-          <NumberHighlight>{(mostCostlyCafeteriaCost / 100).toFixed(2)}</NumberHighlight>元
+          你从不吝啬：
+          <NumberHighlight>{(mostCostlyCafeteriaCost / 100).toFixed(2)}</NumberHighlight>元/顿
         </div>
         <div style={{ marginTop: "40px" }}>
-          而<LocationHighlight>{mostCheapCafeteria}</LocationHighlight>
-        </div>
-        <div>
-          则以平均每顿
+          而<LocationHighlight>{mostCheapCafeteria}</LocationHighlight>总用每顿
           <NumberHighlight>{(mostCheapCafeteriaCost / 100).toFixed(2)}</NumberHighlight>元
         </div>
-        <div>成为你的性价比之选</div>
+        <div>告诉你：简单的幸福，最长久</div>
+        <div style={{ marginTop: "40px", fontSize: "14px", color: "#666", textAlign: "center" }}>
+          <div>每一元，都是对自己的温柔</div>
+        </div>
       </div>
     </PosterCard>
   );
@@ -165,24 +158,27 @@ export function PosterHabit({ data, fontFamily }: { data: ReportData; fontFamily
   return (
     <PosterCard color="#E9F1F7" fontFamily={fontFamily}>
       <div style={{ fontSize: "16px", lineHeight: "1.8" }}>
-        <div style={{ fontWeight: "bold", marginBottom: "16px" }}>你的用餐习惯</div>
-        <div>
-          早餐最常在
+        <div style={{ fontWeight: "bold", marginBottom: "16px" }}>你的三餐时钟</div>
+        <div style={{ textAlign: "left" }}>
           <NumberHighlight>
             {formatTime(breakfastMostFrequent.hour, breakfastMostFrequent.minute)}
           </NumberHighlight>
+          的朝阳，陪你吃早餐
         </div>
-        <div>
-          午餐通常在
+        <div style={{ textAlign: "right" }}>
           <NumberHighlight>
             {formatTime(lunchMostFrequent.hour, lunchMostFrequent.minute)}
           </NumberHighlight>
+          的午后，你在食堂充电
         </div>
-        <div>
-          晚餐多在
+        <div style={{ textAlign: "left" }}>
           <NumberHighlight>
             {formatTime(dinnerMostFrequent.hour, dinnerMostFrequent.minute)}
           </NumberHighlight>
+          的晚风，见证你的放松时刻
+        </div>
+        <div style={{ marginTop: "20px", fontSize: "14px", color: "#666", textAlign: "center" }}>
+          时间记住了你的规律，也记住了你的努力
         </div>
       </div>
     </PosterCard>
@@ -196,15 +192,18 @@ export function PosterFirstMeal({ data, fontFamily }: { data: ReportData; fontFa
   return (
     <PosterCard color="#FDCBD3" fontFamily={fontFamily}>
       <div style={{ fontSize: "16px", lineHeight: "1.8" }}>
-        <div style={{ fontWeight: "bold", marginBottom: "16px" }}>春节后的第一顿</div>
+        <div style={{ fontWeight: "bold", marginBottom: "16px" }}>新年的第一口温暖</div>
         <div>
           {date.getMonth() + 1}月{date.getDate()}日
         </div>
         <div>
-          你在
+          食堂的灯光，在
           <LocationHighlight>{newYearFirstMeal.cafeteria}</LocationHighlight>
         </div>
-        <div>开启了新学期的美食之旅</div>
+        <div>等来了离家返校的你</div>
+        <div style={{ marginTop: "40px", fontSize: "14px", color: "#666", textAlign: "center" }}>
+          新学期，从这一口热乎的饭开始
+        </div>
       </div>
     </PosterCard>
   );
@@ -223,16 +222,16 @@ export function PosterEarliestLatest({
   return (
     <PosterCard color="#E7DFC6" fontFamily={fontFamily}>
       <div style={{ fontSize: "16px", lineHeight: "1.8" }}>
-        <div>
-          最早的一顿在
+        <div style={{ textAlign: "left" }}>
           <NumberHighlight>{formatTime(new Date(earliest))}</NumberHighlight>
+          你已开始新的一天
         </div>
-        <div>
-          最晚的一顿在
+        <div style={{ textAlign: "right" }}>
           <NumberHighlight>{formatTime(new Date(latest))}</NumberHighlight>
+          你还在为生活充电
         </div>
-        <div style={{ marginTop: "40px", fontSize: "10px", color: "#666" }}>
-          无论多早多晚，食堂永远为你亮着灯
+        <div style={{ marginTop: "40px", fontSize: "14px", color: "#666", textAlign: "center" }}>
+          早出晚归的日子，食堂是你温暖的港湾
         </div>
       </div>
     </PosterCard>
@@ -252,20 +251,17 @@ export function PosterMostExpensive({
   return (
     <PosterCard color="#DAF76F" fontFamily={fontFamily}>
       <div style={{ fontSize: "16px", lineHeight: "1.8" }}>
-        <div style={{ fontWeight: "bold", marginBottom: "16px" }}>最贵的一顿</div>
+        <div style={{ fontWeight: "bold", marginBottom: "16px" }}>最舍得犒劳自己的一餐</div>
         <div>
-          {date.getMonth() + 1}月{date.getDate()}日
-        </div>
-        <div>
-          你在
+          {date.getMonth() + 1}月{date.getDate()}日， 在
           <LocationHighlight>{mostExpensiveMealCafeteria}</LocationHighlight>
         </div>
         <div>
-          花费了
+          你花了
           <NumberHighlight>{(mostExpensiveMealAmount / 100).toFixed(2)}</NumberHighlight>元
         </div>
-        <div style={{ marginTop: "20px", fontSize: "10px", color: "#666" }}>
-          那一定是值得纪念的美味
+        <div style={{ marginTop: "20px", fontSize: "14px", color: "#666", textAlign: "center" }}>
+          那天的疲惫或喜悦，都被美食温柔以待
         </div>
       </div>
     </PosterCard>
@@ -279,18 +275,18 @@ export function PosterMostStalls({ data, fontFamily }: { data: ReportData; fontF
   return (
     <PosterCard color="#F9E98F" fontFamily={fontFamily}>
       <div style={{ fontSize: "16px", lineHeight: "1.8" }}>
-        <div style={{ fontWeight: "bold", marginBottom: "16px" }}>最丰富的一顿</div>
+        <div style={{ fontWeight: "bold", marginBottom: "16px" }}>味蕾的狂欢日</div>
         <div>
-          {date.getMonth() + 1}月{date.getDate()}日
+          {date.getMonth() + 1}月{date.getDate()}日， 你在
+          <LocationHighlight>{mostNumStallsCafeteria}</LocationHighlight>
         </div>
         <div>
-          你在<LocationHighlight>{mostNumStallsCafeteria}</LocationHighlight>
+          尝遍了<NumberHighlight>{mostNumStallsMealStalls}</NumberHighlight>
+          个档口的滋味
         </div>
-        <div>
-          品尝了<NumberHighlight>{mostNumStallsMealStalls}</NumberHighlight>
-          个档口
+        <div style={{ marginTop: "20px", fontSize: "14px", color: "#666", textAlign: "center" }}>
+          胃和心，都是满满的幸福
         </div>
-        <div style={{ marginTop: "20px", fontSize: "10px", color: "#666" }}>尝遍百味，不负时光</div>
       </div>
     </PosterCard>
   );
@@ -303,12 +299,12 @@ export function PosterVisitedDays({ data, fontFamily }: { data: ReportData; font
     <PosterCard color="#E9F1F7" fontFamily={fontFamily}>
       <div style={{ fontSize: "16px", lineHeight: "1.8" }}>
         <div>
-          2025年，你有
+          2025年的
           <NumberHighlight>{numVisitedDates}</NumberHighlight>天
         </div>
-        <div>在食堂留下了足迹</div>
-        <div style={{ marginTop: "40px", fontSize: "10px", color: "#666" }}>
-          每一天都是与美食相伴的日子
+        <div>食堂的灯光，都为你亮着</div>
+        <div style={{ marginTop: "40px", fontSize: "14px", color: "#666", textAlign: "center" }}>
+          无论晴天雨天，总有温暖在等你
         </div>
       </div>
     </PosterCard>
@@ -334,10 +330,29 @@ export function PosterScore({ data, fontFamily }: { data: ReportData; fontFamily
     if (score >= 67) return "C-";
     if (score >= 63) return "D+";
     if (score >= 60) return "D";
-    return "?";
+    return "F";
   };
 
   const rank = getRank(score);
+
+  // Get personalized comment based on rank
+  const getComment = (rank: string) => {
+    const comments: Record<string, string> = {
+      "A+": "不愧是清华美食家！",
+      A: "你对食堂的爱，我们都看到了",
+      "A-": "温暖的三餐，充实的一年",
+      "B+": "认真吃饭的人，运气不会差",
+      B: "每一餐，都是对生活的热爱",
+      "B-": "吃饱了，才有力气追梦",
+      "C+": "简单的三餐，不简单的坚持",
+      C: "平凡的烟火气，最抚凡人心",
+      D: "偶尔也要记得，好好吃饭",
+      F: "明年，记得多来食堂看看",
+    };
+    return comments[rank] || "继续加油哦！";
+  };
+
+  const comment = getComment(rank);
 
   // Custom label render function matching original implementation
   const renderLabel = ({ cx, cy, midAngle, outerRadius, percent, index }: any) => {
@@ -391,14 +406,14 @@ export function PosterScore({ data, fontFamily }: { data: ReportData; fontFamily
               fontSize: "14px",
             }}
           >
-            <div>总消费金额: {(totalAmount / 100).toFixed(2)}</div>
-            <div>吃食堂顿数: {totalMeals}</div>
-            <div>打卡食堂数: {numUniqueCafeterias}</div>
+            <div>为美好投入: {(totalAmount / 100).toFixed(2)} 元</div>
+            <div>认真吃饭: {totalMeals} 顿</div>
+            <div>探索温暖: {numUniqueCafeterias} 处</div>
           </div>
           <div style={{ textAlign: "center" }}>
             <NumberHighlight>{score > 100 ? 100 : score.toFixed(1)}</NumberHighlight>
             <div style={{ fontSize: "14px", marginTop: "8px" }}>
-              评级:<NumberHighlight>{rank}</NumberHighlight>
+              <NumberHighlight>{rank}</NumberHighlight>
             </div>
           </div>
         </div>
@@ -445,6 +460,9 @@ export function PosterScore({ data, fontFamily }: { data: ReportData; fontFamily
             </Pie>
           </PieChart>
         </div>
+        <div style={{ fontSize: "12px", color: "#666", textAlign: "center", marginTop: "8px" }}>
+          {comment}
+        </div>
       </div>
     </PosterCard>
   );
@@ -459,66 +477,79 @@ export function PosterMonthlyTrends({
 }) {
   const { monthlySpending, peakMonth, lowMonth } = data;
 
-  const monthNames = ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"];
+  const monthNames = [
+    "1月",
+    "2月",
+    "3月",
+    "4月",
+    "5月",
+    "6月",
+    "7月",
+    "8月",
+    "9月",
+    "10月",
+    "11月",
+    "12月",
+  ];
 
   return (
     <PosterCard color="#E7DFC6" fontFamily={fontFamily}>
       <div style={{ fontSize: "16px", lineHeight: "1.8" }}>
-        <div style={{ fontWeight: "bold", marginBottom: "16px" }}>月度消费趋势</div>
+        <div style={{ fontWeight: "bold", marginBottom: "16px" }}>时光里的美食曲线</div>
         <div>
           <NumberHighlight>{monthNames[peakMonth.month - 1]}</NumberHighlight>
-          是你消费最高的月份
+          的你最懂生活
         </div>
-        <div>
-          共花费
-          <NumberHighlight>{(peakMonth.amount / 100).toFixed(2)}</NumberHighlight>元
+        <div style={{ textAlign: "right" }}>
+          用<NumberHighlight>{(peakMonth.amount / 100).toFixed(2)}</NumberHighlight>
+          元装点美好
         </div>
         <div style={{ marginTop: "20px" }}>
-          而<NumberHighlight>{monthNames[lowMonth.month - 1]}</NumberHighlight>
-          则相对节俭
+          而<NumberHighlight>{monthNames[lowMonth.month - 1]}</NumberHighlight>的简朴
         </div>
-        <div style={{ fontSize: "12px", color: "#666", marginTop: "20px" }}>
-          {monthlySpending.filter((m) => m.amount > 0).length}个月的食堂生活
+        <div style={{ textAlign: "right" }}>也是另一种从从容容</div>
+        <div style={{ fontSize: "14px", color: "#666", marginTop: "20px", textAlign: "center" }}>
+          {monthlySpending.filter((m) => m.amount > 0).length}个月的烟火气
         </div>
       </div>
     </PosterCard>
   );
 }
 
-export function PosterAchievements({
-  data,
-  fontFamily,
-}: {
-  data: ReportData;
-  fontFamily?: string;
-}) {
-  const { achievementBadges } = data;
-  const earnedBadges = achievementBadges.filter((b) => b.earned);
+// export function PosterAchievements({
+//   data,
+//   fontFamily,
+// }: {
+//   data: ReportData;
+//   fontFamily?: string;
+// }) {
+//   const { achievementBadges } = data;
+//   const earnedBadges = achievementBadges.filter((b) => b.earned);
 
-  return (
-    <PosterCard color="#DAF76F" fontFamily={fontFamily}>
-      <div>
-        <div style={{ fontSize: "18px", fontWeight: "bold", marginBottom: "16px" }}>
-          年度成就 {earnedBadges.length}/{achievementBadges.length}
-        </div>
-        <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-          {earnedBadges.slice(0, 4).map((badge) => (
-            <div key={badge.id} style={{ fontSize: "14px", lineHeight: "1.5" }}>
-              <span style={{ fontSize: "20px", marginRight: "8px" }}>{badge.emoji}</span>
-              <span style={{ fontWeight: "bold" }}>{badge.name}</span>
-              <div style={{ fontSize: "12px", color: "#666", marginLeft: "28px" }}>
-                {badge.description}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-      <div style={{ fontSize: "10px", color: "#666", textAlign: "center" }}>
-        你已解锁这些专属成就！
-      </div>
-    </PosterCard>
-  );
-}
+//   return (
+//     <PosterCard color="#DAF76F" fontFamily={fontFamily}>
+//       <div>
+//         <div style={{ fontSize: "18px", fontWeight: "bold", marginBottom: "16px" }}>
+//           年度成就 {earnedBadges.length}/{achievementBadges.length}
+//         </div>
+//         <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+//           {earnedBadges.slice(0, 4).map((badge) => (
+//             <div key={badge.id} style={{ fontSize: "14px", lineHeight: "1.5" }}>
+//               <span style={{ fontSize: "20px", marginRight: "8px" }}>{badge.emoji}</span>
+//               <span style={{ fontWeight: "bold" }}>{badge.name}</span>
+//               <div style={{ fontSize: "12px", color: "#666", marginLeft: "28px" }}>
+//                 {badge.description}
+//               </div>
+//             </div>
+//           ))}
+//         </div>
+//       </div>
+//       <div style={{ fontSize: "10px", color: "#666", textAlign: "center" }}>
+//         你已解锁这些专属成就！
+//       </div>
+//     </PosterCard>
+//   );
+// }
 
 export function PosterConsistentSpot({
   data,
@@ -532,20 +563,17 @@ export function PosterConsistentSpot({
   return (
     <PosterCard color="#F9E98F" fontFamily={fontFamily}>
       <div style={{ fontSize: "16px", lineHeight: "1.8" }}>
-        <div style={{ fontWeight: "bold", marginBottom: "16px" }}>固定据点</div>
+        <div style={{ fontWeight: "bold", marginBottom: "16px" }}>你的安心角落</div>
         <div>
+          无论世界多么喧嚣，你总回到
           <LocationHighlight>{mostFrequentCafeteria.cafeteria}</LocationHighlight>
         </div>
-        <div>
-          是你最常光顾的地方
-        </div>
         <div style={{ marginTop: "20px" }}>
-          在<NumberHighlight>{mostFrequentCafeteria.totalDays}</NumberHighlight>天里
+          <NumberHighlight>{mostFrequentCafeteria.totalDays}</NumberHighlight>天的时光里
         </div>
-        <div>你都选择了这里</div>
-        <div style={{ marginTop: "20px" }}>
-          最长连续打卡
-          <NumberHighlight>{mostFrequentCafeteria.maxStreak}</NumberHighlight>天
+        <div style={{ textAlign: "right" }}>这里是你的充电站、避风港</div>
+        <div style={{ marginTop: "20px", textAlign: "center" }}>
+          最长<NumberHighlight>{mostFrequentCafeteria.maxStreak}</NumberHighlight>天的坚守
         </div>
       </div>
     </PosterCard>
@@ -566,30 +594,42 @@ export function PosterPriceDistribution({
     percentage: Number(range.percentage.toFixed(1)),
   }));
 
+  // Get personalized comment based on price type
+  const getPriceComment = (type: string) => {
+    const comments: Record<string, string> = {
+      勤俭节约型: "简单的幸福，最纯粹",
+      经济实惠型: "懂得生活的智慧",
+      品质生活型: "你值得更好的",
+      豪华享受型: "对美好从不将就",
+    };
+    return comments[type] || "每一餐都是对自己负责";
+  };
+
+  const priceComment = getPriceComment(dominantPriceType);
+
   return (
     <PosterCard color="#E9F1F7" fontFamily={fontFamily}>
       <div>
-        <div style={{ fontSize: "16px", fontWeight: "bold", marginBottom: "12px" }}>
-          消费分布
-        </div>
-        <div
+        <div style={{ fontSize: "16px", fontWeight: "bold", marginBottom: "12px" }}>消费的温度</div>
+        {/* <div
           style={{
             display: "flex",
             justifyContent: "center",
             marginTop: "8px",
           }}
-        >
-          <BarChart width={250} height={150} data={chartData}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#ddd" />
-            <XAxis dataKey="name" tick={{ fontSize: 10 }} />
-            <YAxis tick={{ fontSize: 10 }} />
-            <Tooltip contentStyle={{ fontSize: "12px" }} />
-            <Bar dataKey="percentage" fill="#623CEA" radius={[4, 4, 0, 0]} />
-          </BarChart>
-        </div>
+        > */}
+        <BarChart width={"100%"} height={150} data={chartData}>
+          <CartesianGrid strokeDasharray="3 3" stroke="#ddd" />
+          <XAxis dataKey="name" tick={{ fontSize: 10 }} />
+          <YAxis tick={{ fontSize: 10 }} width={"auto"} />
+          <Tooltip contentStyle={{ fontSize: "12px" }} />
+          <Bar dataKey="percentage" fill="#623CEA" radius={[4, 4, 0, 0]} />
+        </BarChart>
+        {/* </div> */}
       </div>
-      <div style={{ fontSize: "14px", textAlign: "center" }}>
+      <div style={{ fontSize: "18px", textAlign: "center" }}>
         你是<span style={{ fontWeight: "bold", color: "#623CEA" }}>{dominantPriceType}</span>
+        <div style={{ fontSize: "14px", color: "#666", marginTop: "4px" }}>{priceComment}</div>
       </div>
     </PosterCard>
   );
@@ -607,29 +647,29 @@ export function PosterWeekdayWeekend({
   return (
     <PosterCard color="#FDCBD3" fontFamily={fontFamily}>
       <div style={{ fontSize: "16px", lineHeight: "1.8" }}>
-        <div style={{ fontWeight: "bold", marginBottom: "16px" }}>工作日 vs 周末</div>
+        <div style={{ fontWeight: "bold", marginBottom: "16px" }}>奋斗与休憩的时光</div>
         <div>
-          工作日平均每顿
+          工作日，你用
           <NumberHighlight>
             {(weekdayWeekendStats.weekday.avgCost / 100).toFixed(2)}
           </NumberHighlight>
-          元
+          元为自己加油
         </div>
-        <div style={{ fontSize: "12px", color: "#666", marginLeft: "8px" }}>
-          最爱去{weekdayWeekendStats.weekday.topCafeteria}
+        <div style={{ fontSize: "14px", color: "#666" }}>
+          {weekdayWeekendStats.weekday.topCafeteria}记得你拼搏的样子
         </div>
-        <div style={{ marginTop: "20px" }}>
-          周末平均每顿
+        <div style={{ marginTop: "20px", textAlign: "right" }}>
+          周末，你用
           <NumberHighlight>
             {(weekdayWeekendStats.weekend.avgCost / 100).toFixed(2)}
           </NumberHighlight>
-          元
+          元犒劳自己
         </div>
-        <div style={{ fontSize: "12px", color: "#666", marginLeft: "8px" }}>
-          最爱去{weekdayWeekendStats.weekend.topCafeteria}
+        <div style={{ fontSize: "14px", color: "#666", textAlign: "right" }}>
+          {weekdayWeekendStats.weekend.topCafeteria}见证你放松的时刻
         </div>
       </div>
-      <div style={{ fontSize: "12px", color: "#666", textAlign: "center" }}>
+      <div style={{ fontSize: "14px", color: "#666", textAlign: "center" }}>
         {weekdayWeekendStats.comparison}
       </div>
     </PosterCard>
@@ -657,30 +697,36 @@ export function PosterSeasonalPatterns({
     avgCost: Number((season.avgCost / 100).toFixed(2)),
   }));
 
+  // Get seasonal comment
+  const getSeasonComment = (season: string) => {
+    const comments: Record<string, string> = {
+      春天: "新芽和美食一起生长",
+      夏天: "炎炎夏日里的清凉慰藉",
+      秋天: "丰收的季节，胃口也丰收",
+      冬天: "寒冷的日子里，热腾腾的温暖",
+    };
+    return comments[season] || "每个季节都有独特的味道";
+  };
+
+  const seasonComment = getSeasonComment(bestSeason);
+
   return (
     <PosterCard color="#E7DFC6" fontFamily={fontFamily}>
       <div>
         <div style={{ fontSize: "16px", fontWeight: "bold", marginBottom: "12px" }}>
-          四季消费
+          四季的味觉记忆
         </div>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            marginTop: "8px",
-          }}
-        >
-          <BarChart width={250} height={150} data={chartData}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#ddd" />
-            <XAxis dataKey="name" tick={{ fontSize: 10 }} />
-            <YAxis tick={{ fontSize: 10 }} />
-            <Tooltip contentStyle={{ fontSize: "12px" }} />
-            <Bar dataKey="avgCost" fill="#623CEA" radius={[4, 4, 0, 0]} />
-          </BarChart>
-        </div>
+        <BarChart width={"100%"} height={150} data={chartData}>
+          <CartesianGrid strokeDasharray="3 3" stroke="#ddd" />
+          <XAxis dataKey="name" tick={{ fontSize: 10 }} />
+          <YAxis tick={{ fontSize: 10 }} width={"auto"} />
+          <Tooltip contentStyle={{ fontSize: "12px" }} />
+          <Bar dataKey="avgCost" fill="#623CEA" radius={[4, 4, 0, 0]} />
+        </BarChart>
       </div>
-      <div style={{ fontSize: "14px", textAlign: "center" }}>
-        <NumberHighlight>{bestSeason}</NumberHighlight>吃得最丰盛
+      <div style={{ fontSize: "18px", textAlign: "center" }}>
+        <NumberHighlight>{bestSeason}</NumberHighlight>的你最懂生活
+        <div style={{ fontSize: "14px", color: "#666", marginTop: "4px" }}>{seasonComment}</div>
       </div>
     </PosterCard>
   );
@@ -699,51 +745,44 @@ export function PosterLoyalty({ data, fontFamily }: { data: ReportData; fontFami
     <PosterCard color="#DAF76F" fontFamily={fontFamily}>
       <div>
         <div style={{ fontSize: "16px", fontWeight: "bold", marginBottom: "12px" }}>
-          忠诚度排行榜
+          最熟悉的温暖
         </div>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            marginTop: "8px",
-          }}
-        >
-          <BarChart width={250} height={160} data={chartData} layout="vertical">
-            <CartesianGrid strokeDasharray="3 3" stroke="#ddd" />
-            <XAxis type="number" tick={{ fontSize: 10 }} />
-            <YAxis type="category" dataKey="name" tick={{ fontSize: 9 }} width={80} />
-            <Tooltip contentStyle={{ fontSize: "12px" }} />
-            <Bar dataKey="days" fill="#623CEA" radius={[0, 4, 4, 0]} />
-          </BarChart>
+        <BarChart width={"100%"} height={160} data={chartData} layout="vertical">
+          <CartesianGrid strokeDasharray="3 3" stroke="#ddd" />
+          <XAxis type="number" tick={{ fontSize: 10 }} />
+          <YAxis type="category" dataKey="name" tick={{ fontSize: 9 }} width={"auto"} />
+          <Tooltip contentStyle={{ fontSize: "12px" }} />
+          <Bar dataKey="days" fill="#623CEA" radius={[0, 4, 4, 0]} />
+        </BarChart>
+        <div style={{ fontSize: "14px", color: "#666", textAlign: "center" }}>
+          这些地方，都有你温暖的足迹
         </div>
       </div>
     </PosterCard>
   );
 }
 
-export function PosterThankYou({ data, fontFamily }: { data: ReportData; fontFamily?: string }) {
-  const { totalMeals, numUniqueCafeterias } = data;
+// export function PosterThankYou({ data, fontFamily }: { data: ReportData; fontFamily?: string }) {
+//   const { totalMeals, numUniqueCafeterias } = data;
 
-  return (
-    <PosterCard color="#F9E98F" fontFamily={fontFamily}>
-      <div style={{ fontSize: "16px", lineHeight: "1.8", textAlign: "center" }}>
-        <div style={{ fontSize: "20px", fontWeight: "bold", marginBottom: "30px" }}>
-          感谢有你
-        </div>
-        <div style={{ marginBottom: "20px" }}>
-          <NumberHighlight>{totalMeals}</NumberHighlight>顿饭
-        </div>
-        <div style={{ marginBottom: "20px" }}>
-          <NumberHighlight>{numUniqueCafeterias}</NumberHighlight>个食堂
-        </div>
-        <div style={{ fontSize: "14px", color: "#666", marginTop: "30px" }}>
-          2025，感谢清华食堂的陪伴
-        </div>
-        <div style={{ fontSize: "14px", color: "#666" }}>期待2026的美食之旅</div>
-      </div>
-    </PosterCard>
-  );
-}
+//   return (
+//     <PosterCard color="#F9E98F" fontFamily={fontFamily}>
+//       <div style={{ fontSize: "16px", lineHeight: "1.8", textAlign: "center" }}>
+//         <div style={{ fontSize: "20px", fontWeight: "bold", marginBottom: "30px" }}>感谢有你</div>
+//         <div style={{ marginBottom: "20px" }}>
+//           <NumberHighlight>{totalMeals}</NumberHighlight>顿饭
+//         </div>
+//         <div style={{ marginBottom: "20px" }}>
+//           <NumberHighlight>{numUniqueCafeterias}</NumberHighlight>个食堂
+//         </div>
+//         <div style={{ fontSize: "14px", color: "#666", marginTop: "30px" }}>
+//           2025，感谢清华食堂的陪伴
+//         </div>
+//         <div style={{ fontSize: "14px", color: "#666" }}>期待2026的美食之旅</div>
+//       </div>
+//     </PosterCard>
+//   );
+// }
 
 export function PosterWaterUtilities({
   data,
@@ -768,25 +807,28 @@ export function PosterWaterUtilities({
   return (
     <PosterCard color="#B8E6F5" fontFamily={fontFamily}>
       <div style={{ fontSize: "16px", lineHeight: "1.8" }}>
-        <div style={{ fontWeight: "bold", marginBottom: "16px" }}>💧 水电生活</div>
+        <div style={{ fontWeight: "bold", marginBottom: "16px" }}>💧 冲刷疲惫都时刻</div>
         <div>
-          洗澡<NumberHighlight>{waterUtilitiesStats.totalTransactions}</NumberHighlight>次
+          <NumberHighlight>{waterUtilitiesStats.totalTransactions}</NumberHighlight>次热水
         </div>
-        <div>
-          共花费<NumberHighlight>{(waterUtilitiesStats.totalAmount / 100).toFixed(2)}</NumberHighlight>元
+        <div style={{ textAlign: "right" }}>
+          洗去了
+          <NumberHighlight>{(waterUtilitiesStats.totalAmount / 100).toFixed(2)}</NumberHighlight>
+          元的疲惫
         </div>
-        <div style={{ marginTop: "20px" }}>
-          平均每次
+        <div style={{ marginTop: "10px" }}>
+          每次
           <NumberHighlight>{(waterUtilitiesStats.avgCost / 100).toFixed(2)}</NumberHighlight>元
+          换来一身清爽
         </div>
-        <div style={{ marginTop: "20px" }}>
+        <div style={{ marginTop: "10px" }}>
           最常在
           <NumberHighlight>{formatHour(waterUtilitiesStats.mostFrequentHour)}</NumberHighlight>
-          洗澡
+          让温暖包围自己
         </div>
       </div>
-      <div style={{ fontSize: "12px", color: "#666", textAlign: "center" }}>
-        {waterUtilitiesStats.totalDays}天的清爽时光
+      <div style={{ fontSize: "14px", color: "#666", textAlign: "center" }}>
+        {waterUtilitiesStats.totalDays}天的清爽，{waterUtilitiesStats.totalDays}次的新生
       </div>
     </PosterCard>
   );
@@ -804,20 +846,26 @@ export function PosterBalanceManagement({
   return (
     <PosterCard color="#FFE5B4" fontFamily={fontFamily}>
       <div style={{ fontSize: "16px", lineHeight: "1.8" }}>
-        <div style={{ fontWeight: "bold", marginBottom: "16px" }}>💰 余额管理</div>
+        <div style={{ fontWeight: "bold", marginBottom: "16px" }}>💰 生活的节奏</div>
         <div>
-          充值<NumberHighlight>{balanceManagementStats.topUpCount}</NumberHighlight>次
+          <NumberHighlight>{balanceManagementStats.topUpCount}</NumberHighlight>次充值
         </div>
-        <div style={{ fontSize: "12px", color: "#666", marginLeft: "8px" }}>
-          共{(balanceManagementStats.totalTopUpAmount / 100).toFixed(2)}元
+        <div style={{ fontSize: "14px", color: "#666", textAlign: "right" }}>
+          为生活注入{(balanceManagementStats.totalTopUpAmount / 100).toFixed(2)}元的能量
         </div>
-        <div style={{ marginTop: "20px" }}>
-          最低余额
-          <NumberHighlight>{(balanceManagementStats.lowestBalance / 100).toFixed(2)}</NumberHighlight>元
+        <div style={{ marginTop: "10px" }}>
+          最低
+          <NumberHighlight>
+            {(balanceManagementStats.lowestBalance / 100).toFixed(2)}
+          </NumberHighlight>
+          元，也没让生活失色
         </div>
-        <div style={{ marginTop: "20px" }}>
-          期末余额
-          <NumberHighlight>{(balanceManagementStats.endingBalance / 100).toFixed(2)}</NumberHighlight>元
+        <div style={{ marginTop: "10px" }}>
+          年末还有
+          <NumberHighlight>
+            {(balanceManagementStats.endingBalance / 100).toFixed(2)}
+          </NumberHighlight>
+          元温暖在手
         </div>
       </div>
       <div style={{ fontSize: "14px", textAlign: "center", fontWeight: "bold", color: "#623CEA" }}>
@@ -846,26 +894,26 @@ export function PosterBeyondDining({
     <PosterCard color="#E9D5FF" fontFamily={fontFamily}>
       <div>
         <div style={{ fontSize: "16px", fontWeight: "bold", marginBottom: "16px" }}>
-          🎨 丰富生活
+          🎨 生活的调色板
         </div>
         <div style={{ fontSize: "14px", lineHeight: "1.8" }}>
-          除了吃饭，还有
+          除了三餐，还有
           <NumberHighlight>{beyondDiningStats.nonMealTransactions}</NumberHighlight>笔
         </div>
         <div style={{ fontSize: "14px", lineHeight: "1.8" }}>
-          其他消费，共
+          为生活添彩，共
           <NumberHighlight>{(beyondDiningStats.nonMealAmount / 100).toFixed(2)}</NumberHighlight>元
         </div>
         <div style={{ marginTop: "16px", fontSize: "12px", color: "#666" }}>
           {topCategories.map((cat) => (
             <div key={cat.category} style={{ marginBottom: "4px" }}>
-              {cat.category}: {cat.count}次
+              {cat.category}: {cat.count}次的小确幸
             </div>
           ))}
         </div>
       </div>
-      <div style={{ fontSize: "12px", color: "#666", textAlign: "center" }}>
-        多彩的校园生活
+      <div style={{ fontSize: "14px", color: "#666", textAlign: "center" }}>
+        华子的生活，多姿多彩
       </div>
     </PosterCard>
   );
@@ -881,38 +929,50 @@ export function PosterCampusTimeline({
   const { campusTimelineStats } = data;
 
   const formatDate = (dateInput: Date | string) => {
-    const date = typeof dateInput === 'string' ? new Date(dateInput) : dateInput;
+    const date = typeof dateInput === "string" ? new Date(dateInput) : dateInput;
     const month = date.getMonth() + 1;
     const day = date.getDate();
     return `${month}月${day}日`;
   };
 
-  const monthNames = ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"];
+  const monthNames = [
+    "1月",
+    "2月",
+    "3月",
+    "4月",
+    "5月",
+    "6月",
+    "7月",
+    "8月",
+    "9月",
+    "10月",
+    "11月",
+    "12月",
+  ];
 
   return (
     <PosterCard color="#D4F1F4" fontFamily={fontFamily}>
       <div style={{ fontSize: "16px", lineHeight: "1.8" }}>
-        <div style={{ fontWeight: "bold", marginBottom: "16px" }}>📅 时光轨迹</div>
-        <div style={{ fontSize: "14px" }}>
+        <div style={{ fontWeight: "bold", marginBottom: "16px" }}>📅 时光印记</div>
+        <div style={{ fontSize: "16px" }}>
           <NumberHighlight>{formatDate(campusTimelineStats.firstTransaction.date)}</NumberHighlight>
-          开启2025
+          你开始了这一年的旅程
         </div>
-        <div style={{ fontSize: "12px", color: "#666", marginLeft: "8px", marginTop: "4px" }}>
-          首笔：{campusTimelineStats.firstTransaction.location}
+        <div style={{ fontSize: "14px", color: "#666", marginTop: "4px", textAlign: "right" }}>
+          在{campusTimelineStats.firstTransaction.location}点亮第一笔温暖
         </div>
-        <div style={{ fontSize: "14px", marginTop: "20px" }}>
-          最长连续使用
-          <NumberHighlight>{campusTimelineStats.longestStreak}</NumberHighlight>天
+        <div style={{ fontSize: "16px", marginTop: "10px" }}>
+          连续
+          <NumberHighlight>{campusTimelineStats.longestStreak}</NumberHighlight>天都有你的足迹
         </div>
-        <div style={{ fontSize: "14px", marginTop: "20px" }}>
+        <div style={{ fontSize: "16px", marginTop: "10px" }}>
           <NumberHighlight>{monthNames[campusTimelineStats.mostActiveMonth - 1]}</NumberHighlight>
-          最活跃
+          的你最鲜活
         </div>
       </div>
-      <div style={{ fontSize: "12px", color: "#666", textAlign: "center" }}>
-        {campusTimelineStats.totalActiveDays}天的一卡通生活
+      <div style={{ fontSize: "16px", color: "#666", textAlign: "center" }}>
+        {campusTimelineStats.totalActiveDays}天，每天都在认真生活
       </div>
     </PosterCard>
   );
 }
-
