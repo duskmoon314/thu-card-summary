@@ -26,9 +26,7 @@ const PosterCard = ({
       flexDirection: "column",
       justifyContent: "space-between",
       color: "#333",
-      fontFamily:
-        fontFamily ||
-        '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+      fontFamily: fontFamily || '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
     }}
   >
     {children}
@@ -61,15 +59,8 @@ const LocationHighlight = ({ children }: { children: React.ReactNode }) => (
   </span>
 );
 
-export function PosterBasicStats({
-  data,
-  fontFamily,
-}: {
-  data: ReportData;
-  fontFamily?: string;
-}) {
-  const { totalAmount, totalMeals, numUniqueCafeterias, numUniqueStalls } =
-    data;
+export function PosterBasicStats({ data, fontFamily }: { data: ReportData; fontFamily?: string }) {
+  const { totalAmount, totalMeals, numUniqueCafeterias, numUniqueStalls } = data;
 
   return (
     <PosterCard color="#E7DFC6" fontFamily={fontFamily}>
@@ -82,8 +73,7 @@ export function PosterBasicStats({
           <div style={{ marginTop: "10px", fontSize: "12px" }}>在这一年里:</div>
           <div>
             你一共花了
-            <NumberHighlight>{(totalAmount / 100).toFixed(2)}</NumberHighlight>
-            元
+            <NumberHighlight>{(totalAmount / 100).toFixed(2)}</NumberHighlight>元
           </div>
           <div>
             细细品味了<NumberHighlight>{totalMeals}</NumberHighlight>
@@ -108,13 +98,7 @@ export function PosterBasicStats({
   );
 }
 
-export function PosterFavorite({
-  data,
-  fontFamily,
-}: {
-  data: ReportData;
-  fontFamily?: string;
-}) {
+export function PosterFavorite({ data, fontFamily }: { data: ReportData; fontFamily?: string }) {
   const { mostSpentCafeteria, mostSpentCafeteriaAmount, mostSpentStall } = data;
   const stall = mostSpentStall.split("_").slice(1).join("/") || mostSpentStall;
 
@@ -127,10 +111,7 @@ export function PosterFavorite({
         </div>
         <div>
           你在那共花费
-          <NumberHighlight>
-            {(mostSpentCafeteriaAmount / 100).toFixed(2)}
-          </NumberHighlight>
-          元
+          <NumberHighlight>{(mostSpentCafeteriaAmount / 100).toFixed(2)}</NumberHighlight>元
         </div>
         <div style={{ textAlign: "right", marginTop: "40px" }}>
           <div>其中，让你情有独钟的</div>
@@ -145,13 +126,7 @@ export function PosterFavorite({
   );
 }
 
-export function PosterMeanCost({
-  data,
-  fontFamily,
-}: {
-  data: ReportData;
-  fontFamily?: string;
-}) {
+export function PosterMeanCost({ data, fontFamily }: { data: ReportData; fontFamily?: string }) {
   const {
     mostCostlyCafeteria,
     mostCostlyCafeteriaCost,
@@ -167,20 +142,14 @@ export function PosterMeanCost({
         </div>
         <div>
           你平均每顿花费
-          <NumberHighlight>
-            {(mostCostlyCafeteriaCost / 100).toFixed(2)}
-          </NumberHighlight>
-          元
+          <NumberHighlight>{(mostCostlyCafeteriaCost / 100).toFixed(2)}</NumberHighlight>元
         </div>
         <div style={{ marginTop: "40px" }}>
           而<LocationHighlight>{mostCheapCafeteria}</LocationHighlight>
         </div>
         <div>
           则以平均每顿
-          <NumberHighlight>
-            {(mostCheapCafeteriaCost / 100).toFixed(2)}
-          </NumberHighlight>
-          元
+          <NumberHighlight>{(mostCheapCafeteriaCost / 100).toFixed(2)}</NumberHighlight>元
         </div>
         <div>成为你的性价比之选</div>
       </div>
@@ -188,31 +157,19 @@ export function PosterMeanCost({
   );
 }
 
-export function PosterHabit({
-  data,
-  fontFamily,
-}: {
-  data: ReportData;
-  fontFamily?: string;
-}) {
+export function PosterHabit({ data, fontFamily }: { data: ReportData; fontFamily?: string }) {
   const { breakfastMostFrequent, lunchMostFrequent, dinnerMostFrequent } = data;
 
-  const formatTime = (h: number, m: number) =>
-    `${h}:${String(m).padStart(2, "0")}`;
+  const formatTime = (h: number, m: number) => `${h}:${String(m).padStart(2, "0")}`;
 
   return (
     <PosterCard color="#E9F1F7" fontFamily={fontFamily}>
       <div style={{ fontSize: "16px", lineHeight: "1.8" }}>
-        <div style={{ fontWeight: "bold", marginBottom: "16px" }}>
-          你的用餐习惯
-        </div>
+        <div style={{ fontWeight: "bold", marginBottom: "16px" }}>你的用餐习惯</div>
         <div>
           早餐最常在
           <NumberHighlight>
-            {formatTime(
-              breakfastMostFrequent.hour,
-              breakfastMostFrequent.minute
-            )}
+            {formatTime(breakfastMostFrequent.hour, breakfastMostFrequent.minute)}
           </NumberHighlight>
         </div>
         <div>
@@ -232,22 +189,14 @@ export function PosterHabit({
   );
 }
 
-export function PosterFirstMeal({
-  data,
-  fontFamily,
-}: {
-  data: ReportData;
-  fontFamily?: string;
-}) {
+export function PosterFirstMeal({ data, fontFamily }: { data: ReportData; fontFamily?: string }) {
   const { newYearFirstMeal } = data;
   const date = new Date(newYearFirstMeal.date);
 
   return (
     <PosterCard color="#FDCBD3" fontFamily={fontFamily}>
       <div style={{ fontSize: "16px", lineHeight: "1.8" }}>
-        <div style={{ fontWeight: "bold", marginBottom: "16px" }}>
-          春节后的第一顿
-        </div>
+        <div style={{ fontWeight: "bold", marginBottom: "16px" }}>春节后的第一顿</div>
         <div>
           {date.getMonth() + 1}月{date.getDate()}日
         </div>
@@ -269,8 +218,7 @@ export function PosterEarliestLatest({
   fontFamily?: string;
 }) {
   const { earliest, latest } = data;
-  const formatTime = (d: Date) =>
-    `${d.getHours()}:${String(d.getMinutes()).padStart(2, "0")}`;
+  const formatTime = (d: Date) => `${d.getHours()}:${String(d.getMinutes()).padStart(2, "0")}`;
 
   return (
     <PosterCard color="#E7DFC6" fontFamily={fontFamily}>
@@ -298,19 +246,13 @@ export function PosterMostExpensive({
   data: ReportData;
   fontFamily?: string;
 }) {
-  const {
-    mostExpensiveMealDate,
-    mostExpensiveMealAmount,
-    mostExpensiveMealCafeteria,
-  } = data;
+  const { mostExpensiveMealDate, mostExpensiveMealAmount, mostExpensiveMealCafeteria } = data;
   const date = new Date(mostExpensiveMealDate);
 
   return (
     <PosterCard color="#DAF76F" fontFamily={fontFamily}>
       <div style={{ fontSize: "16px", lineHeight: "1.8" }}>
-        <div style={{ fontWeight: "bold", marginBottom: "16px" }}>
-          最贵的一顿
-        </div>
+        <div style={{ fontWeight: "bold", marginBottom: "16px" }}>最贵的一顿</div>
         <div>
           {date.getMonth() + 1}月{date.getDate()}日
         </div>
@@ -320,10 +262,7 @@ export function PosterMostExpensive({
         </div>
         <div>
           花费了
-          <NumberHighlight>
-            {(mostExpensiveMealAmount / 100).toFixed(2)}
-          </NumberHighlight>
-          元
+          <NumberHighlight>{(mostExpensiveMealAmount / 100).toFixed(2)}</NumberHighlight>元
         </div>
         <div style={{ marginTop: "20px", fontSize: "10px", color: "#666" }}>
           那一定是值得纪念的美味
@@ -333,26 +272,14 @@ export function PosterMostExpensive({
   );
 }
 
-export function PosterMostStalls({
-  data,
-  fontFamily,
-}: {
-  data: ReportData;
-  fontFamily?: string;
-}) {
-  const {
-    mostNumStallsMealDate,
-    mostNumStallsMealStalls,
-    mostNumStallsCafeteria,
-  } = data;
+export function PosterMostStalls({ data, fontFamily }: { data: ReportData; fontFamily?: string }) {
+  const { mostNumStallsMealDate, mostNumStallsMealStalls, mostNumStallsCafeteria } = data;
   const date = new Date(mostNumStallsMealDate);
 
   return (
     <PosterCard color="#F9E98F" fontFamily={fontFamily}>
       <div style={{ fontSize: "16px", lineHeight: "1.8" }}>
-        <div style={{ fontWeight: "bold", marginBottom: "16px" }}>
-          最丰富的一顿
-        </div>
+        <div style={{ fontWeight: "bold", marginBottom: "16px" }}>最丰富的一顿</div>
         <div>
           {date.getMonth() + 1}月{date.getDate()}日
         </div>
@@ -363,21 +290,13 @@ export function PosterMostStalls({
           品尝了<NumberHighlight>{mostNumStallsMealStalls}</NumberHighlight>
           个档口
         </div>
-        <div style={{ marginTop: "20px", fontSize: "10px", color: "#666" }}>
-          尝遍百味，不负时光
-        </div>
+        <div style={{ marginTop: "20px", fontSize: "10px", color: "#666" }}>尝遍百味，不负时光</div>
       </div>
     </PosterCard>
   );
 }
 
-export function PosterVisitedDays({
-  data,
-  fontFamily,
-}: {
-  data: ReportData;
-  fontFamily?: string;
-}) {
+export function PosterVisitedDays({ data, fontFamily }: { data: ReportData; fontFamily?: string }) {
   const { numVisitedDates } = data;
 
   return (
@@ -396,19 +315,11 @@ export function PosterVisitedDays({
   );
 }
 
-export function PosterScore({
-  data,
-  fontFamily,
-}: {
-  data: ReportData;
-  fontFamily?: string;
-}) {
-  const { totalAmount, totalMeals, numUniqueCafeterias, cafeteriasSpent } =
-    data;
+export function PosterScore({ data, fontFamily }: { data: ReportData; fontFamily?: string }) {
+  const { totalAmount, totalMeals, numUniqueCafeterias, cafeteriasSpent } = data;
 
   // Calculate score using original formula
-  const score =
-    totalAmount * 0.00003 + totalMeals * 0.01 + numUniqueCafeterias * 6;
+  const score = totalAmount * 0.00003 + totalMeals * 0.01 + numUniqueCafeterias * 6;
 
   // Determine rank based on score
   const getRank = (score: number) => {
@@ -429,14 +340,7 @@ export function PosterScore({
   const rank = getRank(score);
 
   // Custom label render function matching original implementation
-  const renderLabel = ({
-    cx,
-    cy,
-    midAngle,
-    outerRadius,
-    percent,
-    index,
-  }: any) => {
+  const renderLabel = ({ cx, cy, midAngle, outerRadius, percent, index }: any) => {
     const radius = outerRadius * 1.1;
     const x = cx + radius * Math.cos((-midAngle * Math.PI) / 180);
     const y = cy + radius * Math.sin((-midAngle * Math.PI) / 180);
@@ -492,9 +396,7 @@ export function PosterScore({
             <div>打卡食堂数: {numUniqueCafeterias}</div>
           </div>
           <div style={{ textAlign: "center" }}>
-            <NumberHighlight>
-              {score > 100 ? 100 : score.toFixed(1)}
-            </NumberHighlight>
+            <NumberHighlight>{score > 100 ? 100 : score.toFixed(1)}</NumberHighlight>
             <div style={{ fontSize: "14px", marginTop: "8px" }}>
               评级:<NumberHighlight>{rank}</NumberHighlight>
             </div>

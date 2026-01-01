@@ -23,11 +23,7 @@ interface ReportPanelProps {
   getContainer?: HTMLElement | (() => HTMLElement) | false;
 }
 
-export default function ReportPanel({
-  open,
-  onClose,
-  getContainer,
-}: ReportPanelProps) {
+export default function ReportPanel({ open, onClose, getContainer }: ReportPanelProps) {
   const [loading, setLoading] = useState(false);
   const [reportData, setReportData] = useState<ReportData | null>(null);
   const [form] = Form.useForm();
@@ -60,8 +56,7 @@ export default function ReportPanel({
       }
     } catch (error) {
       console.error("[PANEL] Error:", error);
-      const errorMsg =
-        error instanceof Error ? error.message : "生成报告时发生错误";
+      const errorMsg = error instanceof Error ? error.message : "生成报告时发生错误";
 
       // Check if it's a cookie error
       if (
@@ -72,9 +67,7 @@ export default function ReportPanel({
         messageApi.error("请先登录校园卡系统 (card.tsinghua.edu.cn)");
       } else {
         messageApi.error(errorMsg);
-        messageApi.error(
-          "若尚未登录，请先登录系统；若已登录，请尝试排查网络问题"
-        );
+        messageApi.error("若尚未登录，请先登录系统；若已登录，请尝试排查网络问题");
       }
     } finally {
       setLoading(false);
@@ -116,16 +109,10 @@ export default function ReportPanel({
       >
         {!reportData ? (
           <Spin spinning={loading} tip="正在生成年度报告...">
-            <Space
-              vertical
-              size="large"
-              style={{ width: "100%", display: "flex" }}
-            >
+            <Space vertical size="large" style={{ width: "100%", display: "flex" }}>
               <div style={{ textAlign: "center" }}>
                 <Title level={3}>生成 2025 年度报告</Title>
-                <Paragraph type="secondary">
-                  请输入您的学号以生成年度消费报告
-                </Paragraph>
+                <Paragraph type="secondary">请输入您的学号以生成年度消费报告</Paragraph>
               </div>
 
               <Form form={form} onFinish={handleGenerate} layout="vertical">
@@ -156,8 +143,7 @@ export default function ReportPanel({
                     block
                     size="large"
                     style={{
-                      background:
-                        "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                      background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
                       border: "none",
                     }}
                   >

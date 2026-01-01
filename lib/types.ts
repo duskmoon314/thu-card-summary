@@ -4,12 +4,12 @@
 
 // Raw transaction record from API (decrypted)
 export interface RawTransaction {
-  txdate: string;      // Transaction date
-  meraddr: string;     // Cafeteria name
-  mername: string;     // Stall name
-  txamt: number;       // Amount in cents
-  balance: number;     // Card balance after transaction
-  txcode: string;      // Transaction code ("1210" for meals)
+  txdate: string; // Transaction date
+  meraddr: string; // Cafeteria name
+  mername: string; // Stall name
+  txamt: number; // Amount in cents
+  balance: number; // Card balance after transaction
+  txcode: string; // Transaction code ("1210" for meals)
 }
 
 // Processed transaction
@@ -102,7 +102,7 @@ export interface DecryptedResponse {
 
 // Message types for extension communication
 export interface FetchDataMessage {
-  type: 'FETCH_DATA';
+  type: "FETCH_DATA";
   payload: {
     userId: string;
     startDate: string;
@@ -111,7 +111,7 @@ export interface FetchDataMessage {
 }
 
 export interface FetchDataResponse {
-  type: 'FETCH_DATA_RESPONSE';
+  type: "FETCH_DATA_RESPONSE";
   success: boolean;
   data?: ReportData;
   error?: string;

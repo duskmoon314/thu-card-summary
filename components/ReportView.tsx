@@ -1,8 +1,8 @@
-import { useState, useRef, useEffect } from 'react';
-import { Button, Carousel, Space, Flex, Select } from 'antd';
-import { ArrowLeftOutlined, DownloadOutlined } from '@ant-design/icons';
-import type { CarouselRef } from 'antd/es/carousel';
-import type { ReportData } from '@/lib/types';
+import { useState, useRef, useEffect } from "react";
+import { Button, Carousel, Space, Flex, Select } from "antd";
+import { ArrowLeftOutlined, DownloadOutlined } from "@ant-design/icons";
+import type { CarouselRef } from "antd/es/carousel";
+import type { ReportData } from "@/lib/types";
 import {
   PosterBasicStats,
   PosterFavorite,
@@ -14,19 +14,19 @@ import {
   PosterMostStalls,
   PosterVisitedDays,
   PosterScore,
-} from './report/posters';
-import { downloadPosterImage } from '@/lib/image-export';
+} from "./report/posters";
+import { downloadPosterImage } from "@/lib/image-export";
 
 // Fallback fonts if API not available
 const FALLBACK_FONTS = [
-  { label: '默认字体', value: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' },
-  { label: '苹方 (PingFang SC)', value: 'PingFang SC, -apple-system, sans-serif' },
-  { label: '微软雅黑 (Microsoft YaHei)', value: 'Microsoft YaHei, sans-serif' },
-  { label: '思源黑体 (Source Han Sans)', value: 'Source Han Sans SC, sans-serif' },
-  { label: '思源宋体 (Source Han Serif)', value: 'Source Han Serif SC, serif' },
-  { label: '楷体 (KaiTi)', value: 'KaiTi, serif' },
-  { label: '宋体 (SimSun)', value: 'SimSun, serif' },
-  { label: '黑体 (SimHei)', value: 'SimHei, sans-serif' },
+  { label: "默认字体", value: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' },
+  { label: "苹方 (PingFang SC)", value: "PingFang SC, -apple-system, sans-serif" },
+  { label: "微软雅黑 (Microsoft YaHei)", value: "Microsoft YaHei, sans-serif" },
+  { label: "思源黑体 (Source Han Sans)", value: "Source Han Sans SC, sans-serif" },
+  { label: "思源宋体 (Source Han Serif)", value: "Source Han Serif SC, serif" },
+  { label: "楷体 (KaiTi)", value: "KaiTi, serif" },
+  { label: "宋体 (SimSun)", value: "SimSun, serif" },
+  { label: "黑体 (SimHei)", value: "SimHei, sans-serif" },
 ];
 
 /**
@@ -34,17 +34,17 @@ const FALLBACK_FONTS = [
  */
 async function queryAvailableFonts(): Promise<{ label: string; value: string }[]> {
   // Check if Local Font Access API is available
-  if (!('queryLocalFonts' in window)) {
-    console.log('[FONTS] Local Font Access API not available, using fallback');
+  if (!("queryLocalFonts" in window)) {
+    console.log("[FONTS] Local Font Access API not available, using fallback");
     return FALLBACK_FONTS;
   }
 
   try {
-    console.log('[FONTS] Requesting font access permission...');
+    console.log("[FONTS] Requesting font access permission...");
 
     // Query local fonts (requires user permission)
     const fonts = await (window as any).queryLocalFonts();
-    console.log('[FONTS] Found', fonts.length, 'fonts');
+    console.log("[FONTS] Found", fonts.length, "fonts");
 
     // Group fonts by family, preferring Regular style
     const fontsByFamily = new Map<string, any>();
@@ -53,17 +53,18 @@ async function queryAvailableFonts(): Promise<{ label: string; value: string }[]
       const family = font.family;
 
       // Prioritize Chinese fonts
-      const isChinese = /[\u4e00-\u9fa5]/.test(family) ||
-                        family.includes('SC') ||
-                        family.includes('TC') ||
-                        family.includes('Chinese') ||
-                        family.includes('Hei') ||
-                        family.includes('Song') ||
-                        family.includes('Kai') ||
-                        family.includes('PingFang') ||
-                        family.includes('YaHei') ||
-                        family.includes('SimSun') ||
-                        family.includes('SimHei');
+      const isChinese =
+        /[\u4e00-\u9fa5]/.test(family) ||
+        family.includes("SC") ||
+        family.includes("TC") ||
+        family.includes("Chinese") ||
+        family.includes("Hei") ||
+        family.includes("Song") ||
+        family.includes("Kai") ||
+        family.includes("PingFang") ||
+        family.includes("YaHei") ||
+        family.includes("SimSun") ||
+        family.includes("SimHei");
 
       if (!isChinese) continue;
 
@@ -74,14 +75,16 @@ async function queryAvailableFonts(): Promise<{ label: string; value: string }[]
         fontsByFamily.set(family, font);
       } else {
         // Prefer Regular style over other styles
-        const currentStyle = (font.style || '').toLowerCase();
-        const existingStyle = (existing.style || '').toLowerCase();
+        const currentStyle = (font.style || "").toLowerCase();
+        const existingStyle = (existing.style || "").toLowerCase();
 
         // Priority: Regular > Medium > Normal > others
-        const isCurrentRegular = currentStyle.includes('regular') || currentStyle === 'normal' || currentStyle === '';
-        const isExistingRegular = existingStyle.includes('regular') || existingStyle === 'normal' || existingStyle === '';
-        const isCurrentMedium = currentStyle.includes('medium');
-        const isExistingMedium = existingStyle.includes('medium');
+        const isCurrentRegular =
+          currentStyle.includes("regular") || currentStyle === "normal" || currentStyle === "";
+        const isExistingRegular =
+          existingStyle.includes("regular") || existingStyle === "normal" || existingStyle === "";
+        const isCurrentMedium = currentStyle.includes("medium");
+        const isExistingMedium = existingStyle.includes("medium");
 
         if (isCurrentRegular && !isExistingRegular) {
           fontsByFamily.set(family, font);
@@ -93,7 +96,10 @@ async function queryAvailableFonts(): Promise<{ label: string; value: string }[]
 
     // Build font list from preferred variants
     const chineseFonts: { label: string; value: string }[] = [
-      { label: '默认字体', value: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' },
+      {
+        label: "默认字体",
+        value: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+      },
     ];
 
     for (const [family, font] of fontsByFamily) {
@@ -111,10 +117,10 @@ async function queryAvailableFonts(): Promise<{ label: string; value: string }[]
       ...chineseFonts.slice(1).sort((a, b) => a.label.localeCompare(b.label)),
     ];
 
-    console.log('[FONTS] Available Chinese fonts:', sortedFonts.length - 1);
+    console.log("[FONTS] Available Chinese fonts:", sortedFonts.length - 1);
     return sortedFonts.length > 1 ? sortedFonts : FALLBACK_FONTS;
   } catch (error) {
-    console.error('[FONTS] Error querying fonts:', error);
+    console.error("[FONTS] Error querying fonts:", error);
     return FALLBACK_FONTS;
   }
 }
@@ -164,22 +170,22 @@ export default function ReportView({ data, onBack }: ReportViewProps) {
     try {
       const element = posterRefs.current[currentSlide];
       if (!element) {
-        throw new Error('Poster element not found');
+        throw new Error("Poster element not found");
       }
 
-      console.log('[DOWNLOAD] Starting image generation for slide:', currentSlide);
+      console.log("[DOWNLOAD] Starting image generation for slide:", currentSlide);
       await downloadPosterImage(element, currentSlide);
-      console.log('[DOWNLOAD] Image downloaded successfully');
+      console.log("[DOWNLOAD] Image downloaded successfully");
     } catch (error) {
-      console.error('[DOWNLOAD] Error:', error);
-      alert('下载失败：' + (error instanceof Error ? error.message : '未知错误'));
+      console.error("[DOWNLOAD] Error:", error);
+      alert("下载失败：" + (error instanceof Error ? error.message : "未知错误"));
     } finally {
       setDownloading(false);
     }
   };
 
   return (
-    <Flex vertical gap="middle" style={{ height: '100%' }}>
+    <Flex vertical gap="middle" style={{ height: "100%" }}>
       {/* Toolbar */}
       <Space>
         <Button icon={<ArrowLeftOutlined />} onClick={onBack}>
@@ -207,14 +213,16 @@ export default function ReportView({ data, onBack }: ReportViewProps) {
       <Flex vertical align="center" flex={1}>
         <Carousel
           ref={carouselRef}
-          style={{ width: '100%', maxWidth: '350px' }}
+          style={{ width: "100%", maxWidth: "350px" }}
           beforeChange={(_, next) => setCurrentSlide(next)}
           arrows
         >
           {posters.map((poster, index) => (
             <div
               key={index}
-              ref={(el) => { posterRefs.current[index] = el; }}
+              ref={(el) => {
+                posterRefs.current[index] = el;
+              }}
             >
               {poster}
             </div>
@@ -222,24 +230,24 @@ export default function ReportView({ data, onBack }: ReportViewProps) {
         </Carousel>
 
         {/* Indicators */}
-        <Flex gap="small" style={{ marginTop: '16px' }}>
+        <Flex gap="small" style={{ marginTop: "16px" }}>
           {posters.map((_, index) => (
             <div
               key={index}
               style={{
-                width: index === currentSlide ? '24px' : '8px',
-                height: '8px',
-                borderRadius: '4px',
-                background: index === currentSlide ? '#667eea' : '#d9d9d9',
-                transition: 'all 0.3s',
-                cursor: 'pointer',
+                width: index === currentSlide ? "24px" : "8px",
+                height: "8px",
+                borderRadius: "4px",
+                background: index === currentSlide ? "#667eea" : "#d9d9d9",
+                transition: "all 0.3s",
+                cursor: "pointer",
               }}
               onClick={() => carouselRef.current?.goTo(index)}
             />
           ))}
         </Flex>
 
-        <div style={{ marginTop: '8px', fontSize: '13px', color: '#999' }}>
+        <div style={{ marginTop: "8px", fontSize: "13px", color: "#999" }}>
           {currentSlide + 1} / {posters.length}
         </div>
       </Flex>

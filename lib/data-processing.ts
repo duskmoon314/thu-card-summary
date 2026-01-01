@@ -3,15 +3,15 @@
  * Core logic migrated from thu-food-report
  */
 
-import type { RawTransaction, Transaction, Meal, ReportData } from './types';
+import type { RawTransaction, Transaction, Meal, ReportData } from "./types";
 
 /**
  * Convert raw transactions to processed format
  */
 function createTransactions(rows: RawTransaction[]): Transaction[] {
-  console.log('[DATA] Converting raw transactions:', rows.length);
+  console.log("[DATA] Converting raw transactions:", rows.length);
   return rows.map((row) => ({
-    date: new Date(row.txdate + '+08:00'),
+    date: new Date(row.txdate + "+08:00"),
     cafeteria: row.meraddr,
     stall: row.mername,
     amount: row.txamt,
@@ -28,12 +28,10 @@ function cleanTransactions(transactions: Transaction[]): Transaction[] {
 
   const cleaned = transactions.filter(
     (t) =>
-      !excludePatterns.test(t.stall) &&
-      !excludePatterns.test(t.cafeteria) &&
-      t.code === '1210'
+      !excludePatterns.test(t.stall) && !excludePatterns.test(t.cafeteria) && t.code === "1210",
   );
 
-  console.log('[DATA] Cleaned transactions:', cleaned.length, '/', transactions.length);
+  console.log("[DATA] Cleaned transactions:", cleaned.length, "/", transactions.length);
   return cleaned;
 }
 
@@ -42,7 +40,7 @@ function cleanTransactions(transactions: Transaction[]): Transaction[] {
  * Criteria: same cafeteria, within 60 minutes
  */
 function constructMeals(transactions: Transaction[]): Meal[] {
-  console.log('[DATA] Constructing meals from transactions...');
+  console.log("[DATA] Constructing meals from transactions...");
   const sorted = [...transactions].sort((a, b) => a.date.getTime() - b.date.getTime());
   const meals: Meal[] = [];
 
@@ -98,7 +96,7 @@ function constructMeals(transactions: Transaction[]): Meal[] {
     });
   }
 
-  console.log('[DATA] Constructed meals:', meals.length);
+  console.log("[DATA] Constructed meals:", meals.length);
   return meals;
 }
 
@@ -111,7 +109,7 @@ function basicStats(transactions: Transaction[], meals: Meal[]) {
   const uniqueCafeterias = new Set(transactions.map((t) => t.cafeteria)).size;
   const uniqueStalls = new Set(transactions.map((t) => t.stall)).size;
 
-  console.log('[STATS] Basic:', { totalAmount, totalMeals, uniqueCafeterias, uniqueStalls });
+  console.log("[STATS] Basic:", { totalAmount, totalMeals, uniqueCafeterias, uniqueStalls });
 
   return {
     totalAmount,
@@ -132,8 +130,8 @@ function favorite(transactions: Transaction[], meals: Meal[]) {
   });
 
   const [mostVisitedCafeteria, mostVisitedCafeteriaCount] = Array.from(
-    cafeteriaVisits.entries()
-  ).reduce((max, entry) => (entry[1] > max[1] ? entry : max), ['', 0]);
+    cafeteriaVisits.entries(),
+  ).reduce((max, entry) => (entry[1] > max[1] ? entry : max), ["", 0]);
 
   // Most spent cafeteria
   const cafeteriaSpent = new Map<string, number>();
@@ -145,7 +143,7 @@ function favorite(transactions: Transaction[], meals: Meal[]) {
     .map(([cafeteria, amount]) => ({ cafeteria, amount }))
     .sort((a, b) => b.amount - a.amount);
 
-  const mostSpentCafeteria = cafeteriasSpentArray[0]?.cafeteria || '';
+  const mostSpentCafeteria = cafeteriasSpentArray[0]?.cafeteria || "";
   const mostSpentCafeteriaAmount = cafeteriasSpentArray[0]?.amount || 0;
 
   // Most spent stall
@@ -156,10 +154,10 @@ function favorite(transactions: Transaction[], meals: Meal[]) {
 
   const [mostSpentStall, mostSpentStallAmount] = Array.from(stallSpent.entries()).reduce(
     (max, entry) => (entry[1] > max[1] ? entry : max),
-    ['', 0]
+    ["", 0],
   );
 
-  console.log('[STATS] Favorite:', { mostVisitedCafeteria, mostSpentCafeteria, mostSpentStall });
+  console.log("[STATS] Favorite:", { mostVisitedCafeteria, mostSpentCafeteria, mostSpentStall });
 
   return {
     mostVisitedCafeteria,
@@ -194,9 +192,9 @@ function cost(meals: Meal[]) {
   avgCosts.sort((a, b) => b.avgCost - a.avgCost);
 
   return {
-    mostCostlyCafeteria: avgCosts[0]?.cafeteria || '',
+    mostCostlyCafeteria: avgCosts[0]?.cafeteria || "",
     mostCostlyCafeteriaCost: avgCosts[0]?.avgCost || 0,
-    mostCheapCafeteria: avgCosts[avgCosts.length - 1]?.cafeteria || '',
+    mostCheapCafeteria: avgCosts[avgCosts.length - 1]?.cafeteria || "",
     mostCheapCafeteriaCost: avgCosts[avgCosts.length - 1]?.avgCost || 0,
   };
 }
@@ -239,9 +237,9 @@ function time(meals: Meal[]) {
   const getMostFrequent = (map: Map<string, number>) => {
     const [timeStr, count] = Array.from(map.entries()).reduce(
       (max, entry) => (entry[1] > max[1] ? entry : max),
-      ['0:0', 0]
+      ["0:0", 0],
     );
-    const [hour, minute] = timeStr.split(':').map(Number);
+    const [hour, minute] = timeStr.split(":").map(Number);
     return { hour, minute, count };
   };
 
@@ -258,13 +256,13 @@ function time(meals: Meal[]) {
  * Find first meal after Spring Festival 2025 (January 29, 2025)
  */
 function newYearFirstMeal(meals: Meal[]) {
-  const springFestival = new Date('2025-01-29T00:00:00+08:00');
+  const springFestival = new Date("2025-01-29T00:00:00+08:00");
   const firstMealAfter = meals.find((meal) => meal.date > springFestival);
 
   return {
     newYearFirstMeal: {
       date: firstMealAfter?.date || new Date(),
-      cafeteria: firstMealAfter?.cafeteria || '',
+      cafeteria: firstMealAfter?.cafeteria || "",
     },
   };
 }
@@ -275,7 +273,7 @@ function newYearFirstMeal(meals: Meal[]) {
 function mostExpensiveMeal(meals: Meal[]) {
   const expensiveMeal = meals.reduce(
     (max, meal) => (meal.amount > max.amount ? meal : max),
-    meals[0] || { date: new Date(), amount: 0, cafeteria: '' }
+    meals[0] || { date: new Date(), amount: 0, cafeteria: "" },
   );
 
   return {
@@ -291,7 +289,7 @@ function mostExpensiveMeal(meals: Meal[]) {
 function mostNumStallsMeal(meals: Meal[]) {
   const varietyMeal = meals.reduce(
     (max, meal) => (meal.numStalls > max.numStalls ? meal : max),
-    meals[0] || { date: new Date(), numStalls: 0, cafeteria: '' }
+    meals[0] || { date: new Date(), numStalls: 0, cafeteria: "" },
   );
 
   return {
@@ -308,10 +306,10 @@ function maxConsecutiveNoRecordDates(transactions: Transaction[]) {
   const uniqueDates = new Set(
     transactions.map((t) => {
       const d = new Date(t.date);
-      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(
-        d.getDate()
-      ).padStart(2, '0')}`;
-    })
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(
+        d.getDate(),
+      ).padStart(2, "0")}`;
+    }),
   );
 
   return {
@@ -326,7 +324,7 @@ function maxConsecutiveNoRecordDates(transactions: Transaction[]) {
  * Analyze all transaction data and generate report
  */
 export async function analyze(rawData: RawTransaction[]): Promise<ReportData> {
-  console.log('[ANALYZE] Starting analysis with', rawData.length, 'raw records');
+  console.log("[ANALYZE] Starting analysis with", rawData.length, "raw records");
 
   const transactions = createTransactions(rawData);
   const cleanedTransactions = cleanTransactions(transactions);
@@ -344,7 +342,7 @@ export async function analyze(rawData: RawTransaction[]): Promise<ReportData> {
     lastUpdated: new Date(),
   };
 
-  console.log('[ANALYZE] Complete! Total amount:', result.totalAmount / 100, 'yuan');
+  console.log("[ANALYZE] Complete! Total amount:", result.totalAmount / 100, "yuan");
 
   return result;
 }

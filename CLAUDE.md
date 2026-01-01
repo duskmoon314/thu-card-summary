@@ -5,6 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Project Overview
 
 This is a browser extension built with WXT that generates annual reports for Tsinghua University card.tsinghua.edu.cn users. The extension provides:
+
 - A floating button on card.tsinghua.edu.cn/userselftrade
 - A panel to fetch transaction data and generate annual reports
 - Image export using Vercel Satori for sharing
@@ -15,6 +16,7 @@ This project upgrades the previous Next.js web app (located in `/thu-food-report
 ## Development Commands
 
 ### Running the Extension
+
 ```bash
 # Development mode (Chrome)
 bun run dev
@@ -35,12 +37,15 @@ bun run compile
 ```
 
 ### Package Management
+
 This project uses `bun` as the package manager. Install dependencies with:
+
 ```bash
 bun install
 ```
 
 After installing dependencies, always run:
+
 ```bash
 bun run postinstall  # or: wxt prepare
 ```
@@ -58,6 +63,7 @@ WXT follows a file-based entrypoint system where files in `/entrypoints` automat
 ### Key Architectural Patterns
 
 **Data Flow**:
+
 1. Content script detects page load on card.tsinghua.edu.cn/userselftrade
 2. Injects floating button in right bottom corner
 3. User clicks button → opens panel
@@ -68,6 +74,7 @@ WXT follows a file-based entrypoint system where files in `/entrypoints` automat
 8. Satori generates PNG images for sharing
 
 **Data Processing Pipeline** (from thu-food-report):
+
 ```
 fetchData → cleanDataFrame → createDataTable → constructMealDataTable → analyze
 ```
@@ -79,11 +86,13 @@ fetchData → cleanDataFrame → createDataTable → constructMealDataTable → 
 The `/thu-food-report` directory contains the original Next.js implementation. Key components to migrate:
 
 **Core Logic** (reusable):
+
 - `src/action.ts`: Data fetching, AES decryption, data processing, analysis functions
 - `src/components/poster.tsx`: 10 visualization components (slides)
 - Analysis functions: BasicStats, Favorite, Cost, Time, NewYearFirstMeal, etc.
 
 **Needs Adaptation**:
+
 - Replace Next.js server actions with extension background messages
 - Replace MongoDB with temporary in-memory storage (no persistence needed)
 - Replace Next.js routing with in-panel navigation
@@ -92,6 +101,7 @@ The `/thu-food-report` directory contains the original Next.js implementation. K
 ### Tech Stack Requirements
 
 **Current (to be added)**:
+
 - Ant Design v6 (`antd@^6.0.0`)
 - Ant Design Charts (`@ant-design/charts`)
 - Ant Design X (`@ant-design/x` - for future LLM features)
@@ -103,6 +113,7 @@ The `/thu-food-report` directory contains the original Next.js implementation. K
 - crypto-js or Web Crypto API - for AES-128-ECB decryption
 
 **Already Installed**:
+
 - React 19.2.3
 - WXT 0.20.6
 - TypeScript 5.9.3
@@ -136,6 +147,7 @@ Response:
 ```
 
 **Debug Output**: Implement configurable debug logging to capture:
+
 - Raw API request/response
 - Decryption status
 - Data structure changes
@@ -144,6 +156,7 @@ Response:
 This helps detect undocumented API changes.
 
 ### Decrypted Transaction Record
+
 ```typescript
 {
   txdate: string       // Transaction date
@@ -158,29 +171,35 @@ This helps detect undocumented API changes.
 **Note**: These field names may have changed in the 2025 API. Debug output will help identify changes.
 
 ### Report Data Type
+
 See `thu-food-report/src/action.ts` for the complete `ReportData` type (38 fields including totalAmount, totalMeals, favorite cafeteria/stall, timing habits, etc.)
 
 ## Important Implementation Notes
 
 ### Content Script Constraints
+
 - Match pattern should be: `*://card.tsinghua.edu.cn/userselftrade*`
 - Use Shadow DOM for floating button/panel to avoid CSS conflicts
 - Listen for page load completion before injecting UI
 - Use `@1natsu/wait-element` or similar to ensure page elements are ready
 
 ### Background Worker
+
 - Use `chrome.cookies.get()` (or `browser.cookies.get()`) to retrieve servicehall cookie
 - Handle API rate limiting with retry logic (max 3 retries, exponential backoff)
 - Process large datasets (1000 items per page, multiple pages) efficiently
 - **No persistent storage needed** - fetch data fresh on each report generation
 
 ### Debug Configuration
+
 Implement a debug mode that can be toggled via:
+
 - Extension popup settings
 - Developer console command
 - Environment variable during build
 
 Debug output should include:
+
 - API request details (URL, headers, body)
 - Raw API responses (before decryption)
 - Decrypted data structure
@@ -188,11 +207,13 @@ Debug output should include:
 - Any errors or unexpected data formats
 
 ### Security Considerations
+
 - Never log servicehall cookie in debug output (redact it)
 - Validate all data from card.tsinghua.edu.cn API
 - Sanitize user inputs to prevent XSS
 
 ### UI/UX Requirements
+
 - Floating button: fixed position, bottom-right corner, z-index > page content
 - Panel: slide-in animation, draggable/resizable optional
 - Use Ant Design theme tokens for consistent styling
@@ -200,6 +221,7 @@ Debug output should include:
 - Support dark mode (Ant Design v6 has built-in support)
 
 ### Satori Image Generation
+
 - Satori converts React components to SVG/PNG
 - Requires custom font loading (currently using AlimamaShuHeiTi in thu-food-report)
 - Render each report slide (300x300px) as separate images
@@ -229,12 +251,14 @@ Debug output should include:
 ## Configuration Files
 
 ### wxt.config.ts
+
 - Already configured with `@wxt-dev/module-react`
 - Add manifest configuration for permissions:
   - `host_permissions`: `["*://card.tsinghua.edu.cn/*"]`
   - `permissions`: `["cookies", "storage"]` (storage only for settings, not transaction data)
 
 ### tsconfig.json
+
 - Extends `.wxt/tsconfig.json`
 - Uses `jsx: "react-jsx"`
 - Allows importing TypeScript extensions
@@ -242,6 +266,7 @@ Debug output should include:
 ## Common Development Patterns
 
 ### Message Passing (Content ↔ Background)
+
 ```typescript
 // Content script
 browser.runtime.sendMessage({
@@ -262,23 +287,28 @@ browser.runtime.onMessage.addListener((message) => {
 The original thu-food-report uses Arquero. Consider these alternatives:
 
 **Polars (polars-js)**:
+
 - Pros: Fast, Rust-based, familiar DataFrame API
 - Cons: Larger bundle size, Node.js focused
 
 **DuckDB-wasm**:
+
 - Pros: SQL interface, very fast for aggregations, runs in browser
 - Cons: WebAssembly overhead, steeper learning curve
 
 **Arquero** (current):
+
 - Pros: Lightweight, JavaScript-native, already working code
 - Cons: Slower than Polars/DuckDB on large datasets
 
 Choose based on:
+
 1. Bundle size constraints for extension
 2. Performance with expected data sizes (typically 1000-5000 transactions/year)
 3. Code migration effort from thu-food-report
 
 ### Debug Logging Pattern
+
 ```typescript
 // lib/debug.ts
 export const debug = {
@@ -300,6 +330,7 @@ export const debug = {
 ## Dependencies to Add
 
 When setting up the project, install these additional packages:
+
 ```bash
 bun add antd @ant-design/charts @ant-design/x
 bun add satori
@@ -323,6 +354,7 @@ bun add -d @types/crypto-js  # if using crypto-js
 ## 2025 Data Update
 
 The original thu-food-report was for 2024 data. Update:
+
 - Date range: `2025-01-01` to `2025-12-31`
 - NewYearFirstMeal logic: adjust for 2025 Spring Festival date (January 29, 2025)
 - Any hardcoded 2024 references in UI text
@@ -332,6 +364,7 @@ The original thu-food-report was for 2024 data. Update:
 ## Future Enhancements
 
 The architecture should support adding Ant Design X chatbot features later:
+
 - Reserve space in panel for chat interface
 - Design data structures to be queryable by LLM
 - Consider using extension background for LLM API calls

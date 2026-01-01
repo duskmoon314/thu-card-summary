@@ -85,6 +85,7 @@ bun wxt zip -b edge
 ```
 
 构建产物在 `.output/` 目录：
+
 - `.output/chrome-mv3/` - Chrome 扩展
 - `.output/firefox-mv2/` - Firefox 扩展
 - `.output/edge-mv3/` - Edge 扩展
@@ -140,6 +141,7 @@ bun wxt zip -b edge
 - **自动发布**: Push tag（如 `v1.0.0`）时自动创建 GitHub Release
 
 查看构建产物：
+
 - 每次构建的 artifacts: [Actions](https://github.com/duskmoon314/thu-card-summary/actions)
 - 正式发布版本: [Releases](https://github.com/duskmoon314/thu-card-summary/releases)
 

@@ -1,8 +1,8 @@
 {
   "name": "thu-card-summary",
-  "description": "Tsinghua University Card Annual Report Generator",
+  "version": "1.1.0",
   "private": true,
-  "version": "1.0.0",
+  "description": "Tsinghua University Card Annual Report Generator",
   "type": "module",
   "scripts": {
     "dev": "wxt",
@@ -12,6 +12,8 @@
     "zip": "wxt zip",
     "zip:firefox": "wxt zip -b firefox",
     "compile": "tsc --noEmit",
+    "format": "oxfmt .",
+    "format:check": "oxfmt --check .",
     "postinstall": "wxt prepare"
   },
   "dependencies": {
@@ -30,6 +32,7 @@
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "@wxt-dev/module-react": "^1.1.5",
+    "oxfmt": "^0.21.0",
     "typescript": "^5.9.3",
     "wxt": "^0.20.6"
   }
