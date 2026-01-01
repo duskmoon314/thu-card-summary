@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Button, Carousel, Space, Flex, Select } from "antd";
-import { ArrowLeftOutlined, DownloadOutlined } from "@ant-design/icons";
+import { ArrowLeftOutlined, DownloadOutlined, FileTextOutlined } from "@ant-design/icons";
 import type { CarouselRef } from "antd/es/carousel";
 import type { ReportData } from "@/lib/types";
 import {
@@ -14,6 +14,18 @@ import {
   PosterMostStalls,
   PosterVisitedDays,
   PosterScore,
+  PosterMonthlyTrends,
+  PosterAchievements,
+  PosterConsistentSpot,
+  PosterPriceDistribution,
+  PosterWeekdayWeekend,
+  PosterSeasonalPatterns,
+  PosterLoyalty,
+  PosterThankYou,
+  PosterWaterUtilities,
+  PosterBalanceManagement,
+  PosterBeyondDining,
+  PosterCampusTimeline,
 } from "./report/posters";
 import { downloadPosterImage } from "@/lib/image-export";
 
@@ -163,7 +175,19 @@ export default function ReportView({ data, onBack }: ReportViewProps) {
     <PosterMostStalls key="stalls" data={data} fontFamily={selectedFont} />,
     <PosterVisitedDays key="visited" data={data} fontFamily={selectedFont} />,
     <PosterScore key="score" data={data} fontFamily={selectedFont} />,
-  ];
+    <PosterMonthlyTrends key="monthly" data={data} fontFamily={selectedFont} />,
+    <PosterAchievements key="achievements" data={data} fontFamily={selectedFont} />,
+    <PosterConsistentSpot key="consistent" data={data} fontFamily={selectedFont} />,
+    <PosterPriceDistribution key="price" data={data} fontFamily={selectedFont} />,
+    <PosterWeekdayWeekend key="weekday" data={data} fontFamily={selectedFont} />,
+    <PosterSeasonalPatterns key="seasonal" data={data} fontFamily={selectedFont} />,
+    <PosterLoyalty key="loyalty" data={data} fontFamily={selectedFont} />,
+    <PosterWaterUtilities key="water" data={data} fontFamily={selectedFont} />,
+    <PosterBalanceManagement key="balance" data={data} fontFamily={selectedFont} />,
+    <PosterBeyondDining key="beyond" data={data} fontFamily={selectedFont} />,
+    <PosterCampusTimeline key="timeline" data={data} fontFamily={selectedFont} />,
+    <PosterThankYou key="thankyou" data={data} fontFamily={selectedFont} />,
+  ].filter((poster) => poster !== null);
 
   const handleDownload = async () => {
     setDownloading(true);
@@ -181,6 +205,34 @@ export default function ReportView({ data, onBack }: ReportViewProps) {
       alert("下载失败：" + (error instanceof Error ? error.message : "未知错误"));
     } finally {
       setDownloading(false);
+    }
+  };
+
+  const handleDownloadRawData = () => {
+    try {
+      if (!data.rawTransactions || data.rawTransactions.length === 0) {
+        alert("没有可导出的原始交易数据");
+        return;
+      }
+
+      // Convert to JSONL format (one JSON object per line)
+      const jsonl = data.rawTransactions.map((tx) => JSON.stringify(tx)).join("\n");
+
+      // Create blob and download
+      const blob = new Blob([jsonl], { type: "application/x-ndjson" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `thu-card-transactions-${new Date().toISOString().split("T")[0]}.jsonl`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      console.log("[DOWNLOAD] Raw data downloaded:", data.rawTransactions.length, "transactions");
+    } catch (error) {
+      console.error("[DOWNLOAD] Error downloading raw data:", error);
+      alert("下载失败：" + (error instanceof Error ? error.message : "未知错误"));
     }
   };
 
@@ -206,6 +258,13 @@ export default function ReportView({ data, onBack }: ReportViewProps) {
           onClick={handleDownload}
         >
           下载当前图片
+        </Button>
+        <Button
+          icon={<FileTextOutlined />}
+          onClick={handleDownloadRawData}
+          disabled={!data.rawTransactions || data.rawTransactions.length === 0}
+        >
+          导出原始数据
         </Button>
       </Space>
 

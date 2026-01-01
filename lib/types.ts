@@ -10,6 +10,8 @@ export interface RawTransaction {
   txamt: number; // Amount in cents
   balance: number; // Card balance after transaction
   txcode: string; // Transaction code ("1210" for meals)
+  summary?: string; // Transaction summary (持卡人消费, 水控POS消费流水, etc.)
+  txname?: string; // Transaction name
 }
 
 // Processed transaction
@@ -28,6 +30,99 @@ export interface Meal {
   cafeteria: string;
   amount: number;
   numStalls: number;
+}
+
+// Monthly spending data
+export interface MonthlySpending {
+  month: number;
+  amount: number;
+  mealCount: number;
+}
+
+// Achievement badge
+export interface AchievementBadge {
+  id: string;
+  name: string;
+  emoji: string;
+  description: string;
+  earned: boolean;
+  value?: number;
+}
+
+// Price distribution range
+export interface PriceRange {
+  range: string;
+  min: number;
+  max: number;
+  count: number;
+  percentage: number;
+}
+
+// Weekday/Weekend statistics
+export interface WeekdayWeekendStats {
+  weekday: {
+    avgCost: number;
+    mealCount: number;
+    topCafeteria: string;
+  };
+  weekend: {
+    avgCost: number;
+    mealCount: number;
+    topCafeteria: string;
+  };
+  comparison: string;
+}
+
+// Seasonal patterns
+export interface SeasonalPattern {
+  season: "spring" | "summer" | "fall" | "winter";
+  avgCost: number;
+  mealCount: number;
+  topCafeteria: string;
+}
+
+// Cafeteria loyalty data
+export interface CafeteriaLoyalty {
+  cafeteria: string;
+  totalDays: number;
+  avgMonthly: number;
+  maxStreak: number;
+}
+
+// Water/utilities usage stats
+export interface WaterUtilitiesStats {
+  totalTransactions: number;
+  totalAmount: number;
+  avgCost: number;
+  totalDays: number;
+  mostFrequentHour: number;
+}
+
+// Balance management stats
+export interface BalanceManagementStats {
+  topUpCount: number;
+  totalTopUpAmount: number;
+  startingBalance: number;
+  endingBalance: number;
+  lowestBalance: number;
+  managementType: string; // "未雨绸缪型" | "临时抱佛脚型" | "佛系管理型"
+}
+
+// Beyond dining stats
+export interface BeyondDiningStats {
+  nonMealTransactions: number;
+  nonMealAmount: number;
+  categories: Array<{ category: string; count: number; amount: number }>;
+  mostUniquePlace: string;
+}
+
+// Campus life timeline
+export interface CampusTimelineStats {
+  firstTransaction: { date: Date; location: string; type: string };
+  lastTransaction: { date: Date; location: string; type: string };
+  longestStreak: number;
+  mostActiveMonth: number;
+  totalActiveDays: number;
 }
 
 // Report data structure
@@ -75,8 +170,47 @@ export interface ReportData {
   maxConsecutiveNoRecordDateEnd: string | null;
   maxConsecutiveNoRecordDays: number;
 
+  // Extended stats - Monthly trends
+  monthlySpending: MonthlySpending[];
+  peakMonth: { month: number; amount: number };
+  lowMonth: { month: number; amount: number };
+  monthlyAverage: number;
+
+  // Extended stats - Achievement badges
+  achievementBadges: AchievementBadge[];
+
+  // Extended stats - Most consistent dining spot
+  mostFrequentCafeteria: CafeteriaLoyalty;
+  cafeteriaLoyaltyRanking: CafeteriaLoyalty[];
+
+  // Extended stats - Price distribution
+  priceDistribution: PriceRange[];
+  dominantPriceType: string;
+
+  // Extended stats - Weekday vs Weekend
+  weekdayWeekendStats: WeekdayWeekendStats;
+
+  // Extended stats - Seasonal patterns
+  seasonalPatterns: SeasonalPattern[];
+  bestSeason: string;
+
+  // Extended stats - Late night meals count
+  lateNightMealsCount: number;
+
+  // Extended stats - Breakfast days count
+  breakfastDaysCount: number;
+
+  // Comprehensive card usage stats
+  waterUtilitiesStats: WaterUtilitiesStats;
+  balanceManagementStats: BalanceManagementStats;
+  beyondDiningStats: BeyondDiningStats;
+  campusTimelineStats: CampusTimelineStats;
+
   // Metadata
   lastUpdated: Date;
+
+  // Raw transaction data (for export)
+  rawTransactions?: RawTransaction[];
 }
 
 // API request/response types

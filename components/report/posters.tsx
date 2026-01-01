@@ -3,7 +3,7 @@
  * Migrated from thu-food-report with Ant Design styling
  */
 
-import { Cell, Pie, PieChart } from "recharts";
+import { Cell, Pie, PieChart, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip } from "recharts";
 import type { ReportData } from "@/lib/types";
 
 const PosterCard = ({
@@ -449,3 +449,470 @@ export function PosterScore({ data, fontFamily }: { data: ReportData; fontFamily
     </PosterCard>
   );
 }
+
+export function PosterMonthlyTrends({
+  data,
+  fontFamily,
+}: {
+  data: ReportData;
+  fontFamily?: string;
+}) {
+  const { monthlySpending, peakMonth, lowMonth } = data;
+
+  const monthNames = ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"];
+
+  return (
+    <PosterCard color="#E7DFC6" fontFamily={fontFamily}>
+      <div style={{ fontSize: "16px", lineHeight: "1.8" }}>
+        <div style={{ fontWeight: "bold", marginBottom: "16px" }}>月度消费趋势</div>
+        <div>
+          <NumberHighlight>{monthNames[peakMonth.month - 1]}</NumberHighlight>
+          是你消费最高的月份
+        </div>
+        <div>
+          共花费
+          <NumberHighlight>{(peakMonth.amount / 100).toFixed(2)}</NumberHighlight>元
+        </div>
+        <div style={{ marginTop: "20px" }}>
+          而<NumberHighlight>{monthNames[lowMonth.month - 1]}</NumberHighlight>
+          则相对节俭
+        </div>
+        <div style={{ fontSize: "12px", color: "#666", marginTop: "20px" }}>
+          {monthlySpending.filter((m) => m.amount > 0).length}个月的食堂生活
+        </div>
+      </div>
+    </PosterCard>
+  );
+}
+
+export function PosterAchievements({
+  data,
+  fontFamily,
+}: {
+  data: ReportData;
+  fontFamily?: string;
+}) {
+  const { achievementBadges } = data;
+  const earnedBadges = achievementBadges.filter((b) => b.earned);
+
+  return (
+    <PosterCard color="#DAF76F" fontFamily={fontFamily}>
+      <div>
+        <div style={{ fontSize: "18px", fontWeight: "bold", marginBottom: "16px" }}>
+          年度成就 {earnedBadges.length}/{achievementBadges.length}
+        </div>
+        <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+          {earnedBadges.slice(0, 4).map((badge) => (
+            <div key={badge.id} style={{ fontSize: "14px", lineHeight: "1.5" }}>
+              <span style={{ fontSize: "20px", marginRight: "8px" }}>{badge.emoji}</span>
+              <span style={{ fontWeight: "bold" }}>{badge.name}</span>
+              <div style={{ fontSize: "12px", color: "#666", marginLeft: "28px" }}>
+                {badge.description}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div style={{ fontSize: "10px", color: "#666", textAlign: "center" }}>
+        你已解锁这些专属成就！
+      </div>
+    </PosterCard>
+  );
+}
+
+export function PosterConsistentSpot({
+  data,
+  fontFamily,
+}: {
+  data: ReportData;
+  fontFamily?: string;
+}) {
+  const { mostFrequentCafeteria } = data;
+
+  return (
+    <PosterCard color="#F9E98F" fontFamily={fontFamily}>
+      <div style={{ fontSize: "16px", lineHeight: "1.8" }}>
+        <div style={{ fontWeight: "bold", marginBottom: "16px" }}>固定据点</div>
+        <div>
+          <LocationHighlight>{mostFrequentCafeteria.cafeteria}</LocationHighlight>
+        </div>
+        <div>
+          是你最常光顾的地方
+        </div>
+        <div style={{ marginTop: "20px" }}>
+          在<NumberHighlight>{mostFrequentCafeteria.totalDays}</NumberHighlight>天里
+        </div>
+        <div>你都选择了这里</div>
+        <div style={{ marginTop: "20px" }}>
+          最长连续打卡
+          <NumberHighlight>{mostFrequentCafeteria.maxStreak}</NumberHighlight>天
+        </div>
+      </div>
+    </PosterCard>
+  );
+}
+
+export function PosterPriceDistribution({
+  data,
+  fontFamily,
+}: {
+  data: ReportData;
+  fontFamily?: string;
+}) {
+  const { priceDistribution, dominantPriceType } = data;
+
+  const chartData = priceDistribution.map((range) => ({
+    name: range.range,
+    percentage: Number(range.percentage.toFixed(1)),
+  }));
+
+  return (
+    <PosterCard color="#E9F1F7" fontFamily={fontFamily}>
+      <div>
+        <div style={{ fontSize: "16px", fontWeight: "bold", marginBottom: "12px" }}>
+          消费分布
+        </div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginTop: "8px",
+          }}
+        >
+          <BarChart width={250} height={150} data={chartData}>
+            <CartesianGrid strokeDasharray="3 3" stroke="#ddd" />
+            <XAxis dataKey="name" tick={{ fontSize: 10 }} />
+            <YAxis tick={{ fontSize: 10 }} />
+            <Tooltip contentStyle={{ fontSize: "12px" }} />
+            <Bar dataKey="percentage" fill="#623CEA" radius={[4, 4, 0, 0]} />
+          </BarChart>
+        </div>
+      </div>
+      <div style={{ fontSize: "14px", textAlign: "center" }}>
+        你是<span style={{ fontWeight: "bold", color: "#623CEA" }}>{dominantPriceType}</span>
+      </div>
+    </PosterCard>
+  );
+}
+
+export function PosterWeekdayWeekend({
+  data,
+  fontFamily,
+}: {
+  data: ReportData;
+  fontFamily?: string;
+}) {
+  const { weekdayWeekendStats } = data;
+
+  return (
+    <PosterCard color="#FDCBD3" fontFamily={fontFamily}>
+      <div style={{ fontSize: "16px", lineHeight: "1.8" }}>
+        <div style={{ fontWeight: "bold", marginBottom: "16px" }}>工作日 vs 周末</div>
+        <div>
+          工作日平均每顿
+          <NumberHighlight>
+            {(weekdayWeekendStats.weekday.avgCost / 100).toFixed(2)}
+          </NumberHighlight>
+          元
+        </div>
+        <div style={{ fontSize: "12px", color: "#666", marginLeft: "8px" }}>
+          最爱去{weekdayWeekendStats.weekday.topCafeteria}
+        </div>
+        <div style={{ marginTop: "20px" }}>
+          周末平均每顿
+          <NumberHighlight>
+            {(weekdayWeekendStats.weekend.avgCost / 100).toFixed(2)}
+          </NumberHighlight>
+          元
+        </div>
+        <div style={{ fontSize: "12px", color: "#666", marginLeft: "8px" }}>
+          最爱去{weekdayWeekendStats.weekend.topCafeteria}
+        </div>
+      </div>
+      <div style={{ fontSize: "12px", color: "#666", textAlign: "center" }}>
+        {weekdayWeekendStats.comparison}
+      </div>
+    </PosterCard>
+  );
+}
+
+export function PosterSeasonalPatterns({
+  data,
+  fontFamily,
+}: {
+  data: ReportData;
+  fontFamily?: string;
+}) {
+  const { seasonalPatterns, bestSeason } = data;
+
+  const seasonNames = {
+    spring: "春季",
+    summer: "夏季",
+    fall: "秋季",
+    winter: "冬季",
+  };
+
+  const chartData = seasonalPatterns.map((season) => ({
+    name: seasonNames[season.season],
+    avgCost: Number((season.avgCost / 100).toFixed(2)),
+  }));
+
+  return (
+    <PosterCard color="#E7DFC6" fontFamily={fontFamily}>
+      <div>
+        <div style={{ fontSize: "16px", fontWeight: "bold", marginBottom: "12px" }}>
+          四季消费
+        </div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginTop: "8px",
+          }}
+        >
+          <BarChart width={250} height={150} data={chartData}>
+            <CartesianGrid strokeDasharray="3 3" stroke="#ddd" />
+            <XAxis dataKey="name" tick={{ fontSize: 10 }} />
+            <YAxis tick={{ fontSize: 10 }} />
+            <Tooltip contentStyle={{ fontSize: "12px" }} />
+            <Bar dataKey="avgCost" fill="#623CEA" radius={[4, 4, 0, 0]} />
+          </BarChart>
+        </div>
+      </div>
+      <div style={{ fontSize: "14px", textAlign: "center" }}>
+        <NumberHighlight>{bestSeason}</NumberHighlight>吃得最丰盛
+      </div>
+    </PosterCard>
+  );
+}
+
+export function PosterLoyalty({ data, fontFamily }: { data: ReportData; fontFamily?: string }) {
+  const { cafeteriaLoyaltyRanking } = data;
+
+  const chartData = cafeteriaLoyaltyRanking.slice(0, 5).map((item, index) => ({
+    name: `${index + 1}. ${item.cafeteria.length > 6 ? item.cafeteria.slice(0, 6) + "..." : item.cafeteria}`,
+    days: item.totalDays,
+    fullName: item.cafeteria,
+  }));
+
+  return (
+    <PosterCard color="#DAF76F" fontFamily={fontFamily}>
+      <div>
+        <div style={{ fontSize: "16px", fontWeight: "bold", marginBottom: "12px" }}>
+          忠诚度排行榜
+        </div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginTop: "8px",
+          }}
+        >
+          <BarChart width={250} height={160} data={chartData} layout="vertical">
+            <CartesianGrid strokeDasharray="3 3" stroke="#ddd" />
+            <XAxis type="number" tick={{ fontSize: 10 }} />
+            <YAxis type="category" dataKey="name" tick={{ fontSize: 9 }} width={80} />
+            <Tooltip contentStyle={{ fontSize: "12px" }} />
+            <Bar dataKey="days" fill="#623CEA" radius={[0, 4, 4, 0]} />
+          </BarChart>
+        </div>
+      </div>
+    </PosterCard>
+  );
+}
+
+export function PosterThankYou({ data, fontFamily }: { data: ReportData; fontFamily?: string }) {
+  const { totalMeals, numUniqueCafeterias } = data;
+
+  return (
+    <PosterCard color="#F9E98F" fontFamily={fontFamily}>
+      <div style={{ fontSize: "16px", lineHeight: "1.8", textAlign: "center" }}>
+        <div style={{ fontSize: "20px", fontWeight: "bold", marginBottom: "30px" }}>
+          感谢有你
+        </div>
+        <div style={{ marginBottom: "20px" }}>
+          <NumberHighlight>{totalMeals}</NumberHighlight>顿饭
+        </div>
+        <div style={{ marginBottom: "20px" }}>
+          <NumberHighlight>{numUniqueCafeterias}</NumberHighlight>个食堂
+        </div>
+        <div style={{ fontSize: "14px", color: "#666", marginTop: "30px" }}>
+          2025，感谢清华食堂的陪伴
+        </div>
+        <div style={{ fontSize: "14px", color: "#666" }}>期待2026的美食之旅</div>
+      </div>
+    </PosterCard>
+  );
+}
+
+export function PosterWaterUtilities({
+  data,
+  fontFamily,
+}: {
+  data: ReportData;
+  fontFamily?: string;
+}) {
+  const { waterUtilitiesStats } = data;
+
+  if (waterUtilitiesStats.totalTransactions === 0) {
+    return null; // Don't show if no water transactions
+  }
+
+  const formatHour = (hour: number) => {
+    if (hour >= 6 && hour < 12) return `早上${hour}点`;
+    if (hour >= 12 && hour < 18) return `下午${hour - 12 === 0 ? 12 : hour - 12}点`;
+    if (hour >= 18 && hour < 24) return `晚上${hour - 12}点`;
+    return `凌晨${hour}点`;
+  };
+
+  return (
+    <PosterCard color="#B8E6F5" fontFamily={fontFamily}>
+      <div style={{ fontSize: "16px", lineHeight: "1.8" }}>
+        <div style={{ fontWeight: "bold", marginBottom: "16px" }}>💧 水电生活</div>
+        <div>
+          洗澡<NumberHighlight>{waterUtilitiesStats.totalTransactions}</NumberHighlight>次
+        </div>
+        <div>
+          共花费<NumberHighlight>{(waterUtilitiesStats.totalAmount / 100).toFixed(2)}</NumberHighlight>元
+        </div>
+        <div style={{ marginTop: "20px" }}>
+          平均每次
+          <NumberHighlight>{(waterUtilitiesStats.avgCost / 100).toFixed(2)}</NumberHighlight>元
+        </div>
+        <div style={{ marginTop: "20px" }}>
+          最常在
+          <NumberHighlight>{formatHour(waterUtilitiesStats.mostFrequentHour)}</NumberHighlight>
+          洗澡
+        </div>
+      </div>
+      <div style={{ fontSize: "12px", color: "#666", textAlign: "center" }}>
+        {waterUtilitiesStats.totalDays}天的清爽时光
+      </div>
+    </PosterCard>
+  );
+}
+
+export function PosterBalanceManagement({
+  data,
+  fontFamily,
+}: {
+  data: ReportData;
+  fontFamily?: string;
+}) {
+  const { balanceManagementStats } = data;
+
+  return (
+    <PosterCard color="#FFE5B4" fontFamily={fontFamily}>
+      <div style={{ fontSize: "16px", lineHeight: "1.8" }}>
+        <div style={{ fontWeight: "bold", marginBottom: "16px" }}>💰 余额管理</div>
+        <div>
+          充值<NumberHighlight>{balanceManagementStats.topUpCount}</NumberHighlight>次
+        </div>
+        <div style={{ fontSize: "12px", color: "#666", marginLeft: "8px" }}>
+          共{(balanceManagementStats.totalTopUpAmount / 100).toFixed(2)}元
+        </div>
+        <div style={{ marginTop: "20px" }}>
+          最低余额
+          <NumberHighlight>{(balanceManagementStats.lowestBalance / 100).toFixed(2)}</NumberHighlight>元
+        </div>
+        <div style={{ marginTop: "20px" }}>
+          期末余额
+          <NumberHighlight>{(balanceManagementStats.endingBalance / 100).toFixed(2)}</NumberHighlight>元
+        </div>
+      </div>
+      <div style={{ fontSize: "14px", textAlign: "center", fontWeight: "bold", color: "#623CEA" }}>
+        {balanceManagementStats.managementType}
+      </div>
+    </PosterCard>
+  );
+}
+
+export function PosterBeyondDining({
+  data,
+  fontFamily,
+}: {
+  data: ReportData;
+  fontFamily?: string;
+}) {
+  const { beyondDiningStats } = data;
+
+  if (beyondDiningStats.nonMealTransactions === 0) {
+    return null; // Don't show if no non-meal transactions
+  }
+
+  const topCategories = beyondDiningStats.categories.slice(0, 3);
+
+  return (
+    <PosterCard color="#E9D5FF" fontFamily={fontFamily}>
+      <div>
+        <div style={{ fontSize: "16px", fontWeight: "bold", marginBottom: "16px" }}>
+          🎨 丰富生活
+        </div>
+        <div style={{ fontSize: "14px", lineHeight: "1.8" }}>
+          除了吃饭，还有
+          <NumberHighlight>{beyondDiningStats.nonMealTransactions}</NumberHighlight>笔
+        </div>
+        <div style={{ fontSize: "14px", lineHeight: "1.8" }}>
+          其他消费，共
+          <NumberHighlight>{(beyondDiningStats.nonMealAmount / 100).toFixed(2)}</NumberHighlight>元
+        </div>
+        <div style={{ marginTop: "16px", fontSize: "12px", color: "#666" }}>
+          {topCategories.map((cat) => (
+            <div key={cat.category} style={{ marginBottom: "4px" }}>
+              {cat.category}: {cat.count}次
+            </div>
+          ))}
+        </div>
+      </div>
+      <div style={{ fontSize: "12px", color: "#666", textAlign: "center" }}>
+        多彩的校园生活
+      </div>
+    </PosterCard>
+  );
+}
+
+export function PosterCampusTimeline({
+  data,
+  fontFamily,
+}: {
+  data: ReportData;
+  fontFamily?: string;
+}) {
+  const { campusTimelineStats } = data;
+
+  const formatDate = (dateInput: Date | string) => {
+    const date = typeof dateInput === 'string' ? new Date(dateInput) : dateInput;
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    return `${month}月${day}日`;
+  };
+
+  const monthNames = ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"];
+
+  return (
+    <PosterCard color="#D4F1F4" fontFamily={fontFamily}>
+      <div style={{ fontSize: "16px", lineHeight: "1.8" }}>
+        <div style={{ fontWeight: "bold", marginBottom: "16px" }}>📅 时光轨迹</div>
+        <div style={{ fontSize: "14px" }}>
+          <NumberHighlight>{formatDate(campusTimelineStats.firstTransaction.date)}</NumberHighlight>
+          开启2025
+        </div>
+        <div style={{ fontSize: "12px", color: "#666", marginLeft: "8px", marginTop: "4px" }}>
+          首笔：{campusTimelineStats.firstTransaction.location}
+        </div>
+        <div style={{ fontSize: "14px", marginTop: "20px" }}>
+          最长连续使用
+          <NumberHighlight>{campusTimelineStats.longestStreak}</NumberHighlight>天
+        </div>
+        <div style={{ fontSize: "14px", marginTop: "20px" }}>
+          <NumberHighlight>{monthNames[campusTimelineStats.mostActiveMonth - 1]}</NumberHighlight>
+          最活跃
+        </div>
+      </div>
+      <div style={{ fontSize: "12px", color: "#666", textAlign: "center" }}>
+        {campusTimelineStats.totalActiveDays}天的一卡通生活
+      </div>
+    </PosterCard>
+  );
+}
+
