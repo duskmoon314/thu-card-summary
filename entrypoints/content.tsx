@@ -9,6 +9,15 @@ export default defineContentScript({
   async main(ctx) {
     console.log("[THU-CARD-SUMMARY] Content script loaded");
 
+    // Firefox content script fix: bind requestAnimationFrame to window
+    // Firefox's sandbox causes "called on an object that does not implement interface Window" error
+    if (typeof window.requestAnimationFrame === "function") {
+      const boundRAF = window.requestAnimationFrame.bind(window);
+      const boundCAF = window.cancelAnimationFrame.bind(window);
+      window.requestAnimationFrame = boundRAF;
+      window.cancelAnimationFrame = boundCAF;
+    }
+
     const ui = await createShadowRootUi(ctx, {
       name: "thu-card-summary-ui",
       position: "inline",
